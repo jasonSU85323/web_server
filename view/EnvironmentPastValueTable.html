@@ -1,0 +1,416 @@
+$def with(T,H,G,A)
+$var content_type: text/html
+<!DOCTYPE html>
+<html>
+<head>
+    
+	<!-- 以下這5行是引用bootstrap及jquery CDN (Content Delivery Network)的標準動作 -->
+    <meta charset="utf-8"> <!-- 指定內文的編碼，若要顯示中文，通常用utf-8這個unicode編碼 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="http://140.137.41.137:8089/w10507/css_js/ui.css">
+    <title>居家物聯網監控系統</title>
+
+    <!-- // 引用 jQuery.js 和 jQuery-TablePage.js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <script>
+        (function(jQuery){
+		  
+	        jQuery.fn.tablepage = function(oObj, dCountOfPage) {
+
+		        var dPageIndex = 1;
+		        var dNowIndex = 1;
+		        var sPageStr = "";
+		        var dCount = 0;
+		        var oSource = jQuery(this);
+		        var sNoSelColor = "#CCCCCC";
+		        var sSelColor = "black";
+		        var sFontColor = "white";
+
+ 		        change_page_content();
+
+		        function change_page_content()
+		        {
+			        //取得資料筆數
+			        dCount = oSource.children().children().length - 1;
+
+			        //顯示頁碼
+			        sPageStr = "<table><tr><td style='padding: 5px;height:30px;'><b>第</b></td>";
+			
+			        dPageIndex = 1;
+			
+			        for (var i = 1; i <= dCount; i += dCountOfPage)
+			        {
+				        if (dNowIndex == dPageIndex)
+				        {
+					        sPageStr += "<td style='padding: 4px' valign='top'><table style='width:20px;height:20px;cursor:pointer;color:" + sFontColor + ";border-collapse:collapse;border-style:solid;border-width:1px;border-color:" + sSelColor + ";background-color:" + sSelColor + "'><tr><th style='text-align:center;'>" + (dPageIndex++) + "</th></tr></table></td>";
+				        }
+				        else
+				        {
+					        sPageStr += "<td style='padding: 4px'valign='top'><table style='width:20px;height:20px;cursor:pointer;color:" + sFontColor + ";border-collapse:collapse;border-style:solid;border-width:1px;border-color:" + sNoSelColor + ";background-color:" + sNoSelColor + "'><tr><th style='text-align:center;'>" + (dPageIndex++) + "</th></tr></table></td>";
+				        }
+			        }
+			
+			        sPageStr += "<td style='padding: 5px;height:30px;'><b>頁</b></td></tr></table>";
+			
+			        oObj.html(sPageStr);
+			
+			        dPageIndex = 1;
+			
+			        //過濾表格內容
+			        oSource.children().children("tr").each( function () {
+			
+				        if (dPageIndex <= (((dNowIndex - 1) * dCountOfPage) + 1) || dPageIndex > ((dNowIndex * dCountOfPage) + 1))
+				        {
+					        jQuery(this).hide();
+				        }
+				        else
+				        {
+					        jQuery(this).show();	
+				        }
+				
+				        dPageIndex++;
+			        });
+			
+			        oSource.children().children("tr").first().show(); //head一定要顯示
+						
+			        //加入換頁事件
+			        oObj.children().children().children().children().each( function () {
+		
+				        jQuery(this).click( function () {
+				
+					        dNowIndex = jQuery(this).find("tr").text();
+					
+					        if (dNowIndex > 0)
+					        {
+						        change_page_content();
+					        }
+				        });
+			        });
+		        }
+	        };
+        })(jQuery);
+    </script>    
+
+</head>
+<body class="output container">
+
+<!--title-->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">居家物聯網監控系統</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout">登出</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="main">
+
+    <div class="left">
+        <!--環境監控-->
+        <div class="col-sm-2 leftfloat">
+            <div class="list-group">
+                <a class="list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+            </div>
+        </div>
+        <!--安全監控-->
+        <div class="col-sm-2 leftfloat">
+            <div class="list-group">
+                <a class="list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="list-group-item">門鎖</a>
+                <a href="/Monitor"          class="list-group-item">監視器</a>
+                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+            </div>
+        </div>
+        <!--系統設定-->
+        <div class="col-sm-2 leftfloat">
+            <div class="list-group">
+                <a class="list-group-item active">系統設定</a>
+                <a href="/Member" class="list-group-item">成員</a>
+                <a href="/Event" class="list-group-item">事件</a>
+                <a href="/Report" class="list-group-item">報表</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="right">
+        <!--溫度-->
+        <div class="right_temperature">
+            <div class="right_temperature_t">
+                <div class="text_1">溫度</div>
+                    
+                <div class="right_temperature_t_R">
+                    <!--// 放分頁的 HTML 物件-->
+                    <span id='table_page1'></span>
+                </div>
+                <div class="right_temperature_t_L">
+                    <!--// 下拉是選單(年/月/日)-->
+                    <form action="/PastValueTable" method="POST">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
+                            <option value="2017">2017年</option>
+                            <option value="2018">2018年</option>
+                            <option value="2019">2019年</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M">
+                            <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                            <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                            <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                            <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D">
+                            <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                            <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                            <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                            <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                            <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                            <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                            <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                            <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                            <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                            <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                            <option value="31">31日</option>
+                        </select>
+                        <button type="submit" class="btn btn-default btn-sm" value="temperature" name="Submit">送出</button>
+                    </form>
+                </div>
+            </div>
+                <table id = "tb1" class="table table-hover">
+                    <!---->
+                    <thead>
+                        <tr>
+                            <th>項次</th>
+                            <th>日期</th>
+                            <th>時間</th>
+                            <th>溫度</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    $for a in T:
+                        <tbody>
+		                    <tr>
+                                <td>$a[0]</td>
+                                <td>2018/10/$a[1]</td>
+                                <td>Am $a[2]:00</td>
+                                <td>20度</td>
+                                <td>涼爽</td>
+                            </tr>
+		                </tbody>
+                    <!---->
+                </table>
+
+        </div>
+        <!--濕度-->
+        <div class="right_temperature">
+            <div class="right_temperature_t">
+                <div class="text_1">濕度</div>
+                <div class="right_temperature_t_R">
+                    <!--// 放分頁的 HTML 物件-->
+                    <span id='table_page2'></span>
+                </div>
+                <div class="right_temperature_t_L">
+                    <!--// 下拉是選單(年/月/日)-->
+                    <form action="/PastValueTable" method="POST">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
+                            <option value="2017">2017年</option>
+                            <option value="2018">2018年</option>
+                            <option value="2019">2019年</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M">
+                            <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                            <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                            <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                            <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D">
+                            <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                            <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                            <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                            <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                            <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                            <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                            <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                            <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                            <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                            <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                            <option value="31">31日</option>
+                        </select>
+                        <button type="submit" class="btn btn-default btn-sm" value="humidity" name="Submit">送出</button>
+                    </form>
+                </div>
+                
+            </div>
+                <table id = "tb2" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>項次</th>
+                            <th>日期</th>
+                            <th>時間</th>
+                            <th>濕度</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    $for a in H:
+                        <tbody>
+		                    <tr>
+                                <td>$a[0]</td>
+                                <td>2018/10/$a[1]</td>
+                                <td>Am $a[2]:00</td>
+                                <td>20度</td>
+                                <td>涼爽</td>
+                            </tr>
+		                </tbody>
+                </table>
+            
+        </div>
+        <!--可燃氣濃度-->
+        <div class="right_temperature">
+            <div class="right_temperature_t">
+                <div class="text_1">可燃氣濃度</div>
+                <div class="right_temperature_t_R">
+                    <!--// 放分頁的 HTML 物件-->
+                    <span id='table_page3'></span>
+                </div>
+                <div class="right_temperature_t_L">
+                    <!--// 下拉是選單(年/月/日)-->
+                    <form action="/PastValueTable" method="POST">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
+                            <option value="2017">2017年</option>
+                            <option value="2018">2018年</option>
+                            <option value="2019">2019年</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M">
+                            <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                            <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                            <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                            <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D">
+                            <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                            <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                            <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                            <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                            <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                            <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                            <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                            <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                            <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                            <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                            <option value="31">31日</option>
+                        </select>
+                        <button type="submit" class="btn btn-default btn-sm" value="gasConcentration" name="Submit">送出</button>
+                    </form>
+                </div>
+                
+            </div>
+                <table id = "tb3" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>項次</th>
+                            <th>日期</th>
+                            <th>時間</th>
+                            <th>可燃氣濃度</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    $for a in G:
+                        <tbody>
+		                    <tr>
+                                <td>$a[0]</td>
+                                <td>2018/10/$a[1]</td>
+                                <td>Am $a[2]:00</td>
+                                <td>20度</td>
+                                <td>涼爽</td>
+                            </tr>
+		                </tbody>
+                </table>
+            
+        </div>
+        <!--空氣清晰度-->
+        <div class="right_temperature">
+            <div class="right_temperature_t">
+                <div class="text_1">空氣清晰度</div>
+                <div class="right_temperature_t_R">
+                    <!--// 放分頁的 HTML 物件-->
+                    <span id='table_page4'></span>
+                </div>
+                <div class="right_temperature_t_L">
+                    <!--// 下拉是選單(年/月/日)-->
+                    <form action="/PastValueTable" method="POST">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
+                            <option value="2017">2017年</option>
+                            <option value="2018">2018年</option>
+                            <option value="2019">2019年</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M">
+                            <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                            <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                            <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                            <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D">
+                            <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                            <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                            <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                            <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                            <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                            <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                            <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                            <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                            <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                            <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                            <option value="31">31日</option>
+                        </select>
+                        <button type="submit" class="btn btn-default btn-sm" value="airClarity" name="Submit">送出</button>
+                    </form>
+                </div>
+                
+            </div>
+                <table id = "tb4" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>項次</th>
+                            <th>日期</th>
+                            <th>時間</th>
+                            <th>空氣清晰度</th>
+                            <th>狀態</th>
+                        </tr>
+                    </thead>
+                    $for a in A:
+                        <tbody>
+		                    <tr>
+                                <td>$a[0]</td>
+                                <td>2018/10/$a[1]</td>
+                                <td>Am $a[2]:00</td>
+                                <td>20度</td>
+                                <td>涼爽</td>
+                            </tr>
+		                </tbody>
+                </table>
+            
+        </div>
+    </div>
+    
+
+</div>
+<script>
+    // 使用 TablePage 功能，參數1是放分頁的 HTML 物件，例如 span，參數2是每頁幾筆
+    jQuery("#tb1").tablepage(jQuery("#table_page1"), 5);
+    jQuery("#tb2").tablepage(jQuery("#table_page2"), 5);
+    jQuery("#tb3").tablepage(jQuery("#table_page3"), 5);
+    jQuery("#tb4").tablepage(jQuery("#table_page4"), 5);
+</script>
+</body>
+</html>

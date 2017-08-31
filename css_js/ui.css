@@ -1,0 +1,170 @@
+html, body {
+    height:100%;
+    margin:0;
+    padding: 0;
+    background-color: #DDDDDD;
+            
+}
+.output{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding-left: 0px;
+    padding-right: 0px;
+ }
+.title{
+    height: 50px;
+    width: 100%;
+    padding-top: 0;
+    background-color: #0066FF;
+    position: fixed;
+}
+.main{
+    height: 100%;
+    width: 100%;
+    padding-top: 50px;
+}
+.left{
+    left: 0px;
+    height: 100%;
+    width: 250px;
+    margin: 0;
+    float:left; 
+    padding-top: 10px;
+}
+.leftfloat{
+    width: 250px;
+    float:left; 
+}
+.right{
+    height: 100%;
+    width: 100%;
+    padding-left: 250px;
+}
+.right_t{
+    height: 200px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    display: flex;
+}
+.right_temperature{
+    height: 270px;
+    width: 99%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+}
+.right_temperature_t{
+    height: 40px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #99BBFF;
+    
+}
+.right_temperature_t_L{
+    height: 40px;
+    width: 300px;
+    float:right;
+    padding-top: 5px;
+}
+.right_temperature_t_R{
+    height: 40px;
+    width: 200px;
+    float:right;
+    padding-top: 5px;
+}
+.ele{
+    height: 200px;
+    width: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 25%;
+    background-color: #5599FF;
+}
+.ele_t{
+    height: 50px;
+    width: 100%;
+    padding-top: 10px;
+    text-align:center;
+    font-family:微軟正黑體;
+    font-size: 20px;
+}
+.ele_b{
+    height: 50px;
+    width: 100%;
+    text-align:center;
+    font-family:微軟正黑體;
+    font-size: 80px;
+    color: #0044BB;
+}
+.text_title{
+    font-family:微軟正黑體;
+    font-size: 38px;
+}
+.text_1{
+    height: 40px;
+    width: 200px;
+    float:left; 
+    font-family:微軟正黑體;
+    font-size: 30px;
+    color: #5555FF;
+}
+.singIN{
+    padding-top: 100px;
+    width: 300px;
+}
+.right_Event{
+    height: 540px;
+    width: 99%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+}
+.right_Event_t{
+    height: 40px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #99BBFF;
+    
+}
+.right_Event_t_L{
+    height: 40px;
+    width: 300px;
+    float:right;
+    padding-top: 5px;
+}
+.right_Event_t_R{
+    height: 40px;
+    width: 200px;
+    float:right;
+    padding-top: 5px;
+}
+
+.right_MemberAdd{
+    height: 800px;
+    width: 99%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+}
+.right_MemberAdd_t{
+    height: 40px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #99BBFF;
+    
+}
+.right_MemberAdd_t_L{
+    height: 40px;
+    width: 300px;
+    float:right;
+    padding-top: 5px;
+}
+.right_MemberAdd_t_R{
+    height: 40px;
+    width: 200px;
+    float:right;
+    padding-top: 5px;
+}
