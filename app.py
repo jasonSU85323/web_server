@@ -3,11 +3,12 @@
 import web
 import json
 import time
+import rsa
 
 urls = (
 	'/ui', 'ui',
 	'/jquery-tablepage', 'jquerytablepage',
-	'/', 'SignIn',													# Login page
+	'/', 'Login',													# Login page
 	'/login', 'Login',												# Login to judge
 	'/logout', 'Logout',											# Sign out
 
@@ -38,25 +39,48 @@ class jquerytablepage:
 #		Log in, log out		#
 #############################
 class Login:
-    def POST(self):
-        render = web.template.render("view")
-        i = web.input()
-        if i.user == '1' and i.password =='1':
-            session.logged_in = True
-            raise web.seeother('/CurrentState')
-        else:
-            session.logged_in = False
-            raise web.seeother('/')
+	session['privkey'] = None
+	def GET(self):
+		render = web.template.render("view")
+		(pub_key, priv_key) = rsa.newkeys(256)
+		self.pubkey_e = hex(pub_key.e)
+		self.pubkey_n = hex(pub_key.n)
+		session['privkey'] = priv_key
+		print(session['privkey'])
+		print("\n")
+		print("e:"+self.pubkey_e)
+		print("n:"+self.pubkey_n)
+		print("--------------------------------------------")
+		return render.SignIn(self.pubkey_e, self.pubkey_n)
+	
+	def POST(self):
+		render = web.template.render("view")
+		i = web.input()
+		username = i.user
+		en_password = i.password
+		print("client：")
+		print(username)
+		print(en_password)
+		print("--------------------------------------------")
+		priv_key = session['privkey']
+		print(priv_key)
+		session['privkey'] = None
+		password = rsa.decrypt(en_password.decode('hex'),priv_key)
+		
+		print(password)
+#        if i.user == '1' and i.password =='1':
+#            session.logged_in = True
+#            raise web.seeother('/CurrentState')
+#        else:
+#            session.logged_in = False
+#            raise web.seeother('/')
+		
 		
 class Logout:
     def GET(self):
         session.logged_in = False
         raise web.seeother('/')
 
-class SignIn:
-	def GET(self):
-		render = web.template.render("view")
-		return render.SignIn()
 #########################################
 #		Environmental monitoring		#		   
 #########################################

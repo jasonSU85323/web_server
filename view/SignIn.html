@@ -1,3 +1,4 @@
+$def with(keye,keyn)
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +8,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--RSA-->
+    <script src="http://www.ohdave.com/rsa/BigInt.js"></script>
+    <script src="http://www.ohdave.com/rsa/Barrett.js"></script>
+    <script src="http://www.ohdave.com/rsa/RSA.js"></script>
+    <script src="http://www.ohdave.com/rsa/RSA_Stripped.js"></script>
 
     <link rel="stylesheet" type="text/css" href="http://140.137.41.137:8089/w10507/css_js/ui.css">
 	<title>居家物聯網監控系統</title>
@@ -23,11 +30,10 @@
     </div>
 </nav>
 
-
 <div class="main">
     
     <center>
-        <form class="singIN" role="form" action="/login" method="POST">
+        <form class="singIN" role="form" action="/login" method="POST" id="loginform">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">
@@ -41,16 +47,50 @@
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
                     </div>
-                    <input type="password" class="form-control" placeholder="請輸入密碼" name="password">
+                    <input type="password" class="form-control" placeholder="請輸入密碼" name="password" id="password">
                 </div>
             </div>
             <br>
-            <button type="submit" class="btn btn-default">登入</button>
+            <input type="hidden" value="$keye" name="pubkeye" id="pubkeye"/>
+            <input type="hidden" value="$keyn" name="pubkeyn" id="pubkeyn"/>
+            <button id="dologin" type="button" class="btn btn-default">登入</button>
         </form>
+
         <br>
-    </center>   
+        $keye
+        <br>
+        $keyn
+
+    </center>
 
 </div>
+<script>
+$$(function(){
+    $$('#dologin').click(function(){
+        var publickeye = document.getElementById("pubkeye").value;
+        var publickeyn = document.getElementById("pubkeyn").value;
+        var loginform = document.getElementById("loginform");
+        pube = (publickeye.substring(2));
+        pubn = (publickeyn.slice(2,-1));
+        var password = document.getElementById("password").value;
+        setMaxDigits(130);
+        var key = new RSAKeyPair(pube,"",pubn);
+        var en_password = encryptedString(key, password);
+        alert(pube + "\n" + pubn+ "\n" + password+ "\n" + key+ "\n" + en_password);
+        document.getElementById("password").value = en_password;
+        loginform.submit();
+    })
+})
+</script>
+<input id="date" type="button" value="今天星期幾">
+<script>
+$$(function(){
+    $$('#date').click(function(){
+        var Today=new Date();
+        alert("今天日期是 " + Today.getFullYear()+ " 年 " + (Today.getMonth()+1) + " 月 " + Today.getDate() + " 日");
+    })
+})
+</script>
 
 </body>
 </html>
