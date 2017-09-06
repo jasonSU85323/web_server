@@ -11,7 +11,6 @@ urls = (
 	'/', 'Login',													# Login page
 	'/login', 'Login',												# Login to judge
 	'/logout', 'Logout',											# Sign out
-
 	'/CurrentState'		,'EnvironmentCurrentState',
 	'/PastValueTable'	,'EnvironmentPastValueTable',
 	'/PastValueFigure'	,'EnvironmentPastValueFigure',
@@ -19,6 +18,10 @@ urls = (
 	'/Monitor'			,'SafetyMonitor',
 	'/EventRecord'		,'SafetyEventRecord',
 	'/Member'			,'SystemMember',
+	'/Member/Quire'		,'SystemMemberQuire',
+	'/Member/Add'		,'SystemMemberAdd',
+	'/Member/Modify'	,'SystemMemberModify',
+	'/Member/Delete'	,'SystemMemberDeiete',
 	'/Event'			,'SystemEvent',
 	'/Report'			,'SystemReport'
 )
@@ -34,9 +37,9 @@ class ui:
 class jquerytablepage:
 	def GET(self):
 		render = web.template.render("css_js")
-		return render.jquery-tablepage()
+		return render.jqueryTablepage()
 #############################
-#		Log in, log out		#
+#		Log in, log out		#(ERROR!!!)
 #############################
 class Login:
 	session['privkey'] = None
@@ -53,7 +56,7 @@ class Login:
 		print("--------------------------------------------")
 		return render.SignIn(self.pubkey_e, self.pubkey_n)
 	
-	def POST(self):
+	def POST_error(self):
 		render = web.template.render("view")
 		i = web.input()
 		username = i.user
@@ -68,12 +71,15 @@ class Login:
 		password = rsa.decrypt(en_password.decode('hex'),priv_key)
 		
 		print(password)
-#        if i.user == '1' and i.password =='1':
-#            session.logged_in = True
-#            raise web.seeother('/CurrentState')
-#        else:
-#            session.logged_in = False
-#            raise web.seeother('/')
+	def POST(self):
+		session.logged_in = True
+		raise web.seeother('/CurrentState')
+#		if i.user == '1' and i.password =='1':
+#			session.logged_in = True
+#			raise web.seeother('/CurrentState')
+#		else:
+#			session.logged_in = False
+#			raise web.seeother('/')
 		
 		
 class Logout:
@@ -200,6 +206,24 @@ class SystemMember:
 	def GET(self):
 		render = web.template.render("view")
 		return render.SystemMember()
+		##################
+class SystemMemberQuire:
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemMemberQuire()
+class SystemMemberAdd:
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemMemberAdd()
+class SystemMemberModify:
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemMemberModify()
+class SystemMemberDeiete:
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemMemberDeiete()
+		##################
 class SystemEvent:
 	def GET(self):
 		render = web.template.render("view")
