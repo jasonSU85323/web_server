@@ -4,6 +4,7 @@ import web
 import json
 import time
 import rsa
+import MySQLdb
 
 urls = (
 	'/ui', 'ui',
@@ -23,13 +24,19 @@ urls = (
 	'/Member/Modify'	,'SystemMemberModify',
 	'/Member/Delete'	,'SystemMemberDeiete',
 	'/Event'			,'SystemEvent',
-	'/Report'			,'SystemReport'
+	'/SystemReportDay'	,'SystemReportDay',
+	'/SystemReportWeek'	,'SystemReportWeek',
+	'/SystemReportMonth','SystemReportMonth'
+
 )
 
 web.config.debug = False
 app = web.application(urls, globals())
 session = web.session.Session(app, web.session.DiskStore('sessions'))      
 
+							#####################
+							#		CSS,JS		#
+							#####################
 class ui:
 	def GET(self):
 		render = web.template.render("css_js")
@@ -38,9 +45,11 @@ class jquerytablepage:
 	def GET(self):
 		render = web.template.render("css_js")
 		return render.jqueryTablepage()
-#############################
-#		Log in, log out		#(ERROR!!!)
-#############################
+
+
+							#############################
+							#		Log in, log out		#(ERROR!!!)
+							#############################
 class Login:
 	session['privkey'] = None
 	def GET(self):
@@ -87,9 +96,10 @@ class Logout:
         session.logged_in = False
         raise web.seeother('/')
 
-#########################################
-#		Environmental monitoring		#		   
-#########################################
+
+							#########################################
+							#		Environmental monitoring		#		   
+							#########################################
 class EnvironmentCurrentState:
 	
 	def __init__(self):
@@ -110,25 +120,51 @@ class EnvironmentCurrentState:
 
 class EnvironmentPastValueTable:
 	def __init__(self):
-		self.strT = []
-		self.strH = []
-		self.strG = []
-		self.strA = []
-		with open('from.json', 'r') as f:
-			self.data = json.load(f,"UTF-8")
-
-		for i in range(0,4,1):
-			self.strT.append([self.data['temperature'][i][0]		,self.data['temperature'][i][1]		,self.data['temperature'][i][2]])
-			self.strH.append([self.data['humidity'][i][0]			,self.data['humidity'][i][1]		,self.data['humidity'][i][2]])
-			self.strG.append([self.data['gasConcentration'][i][0]	,self.data['gasConcentration'][i][1],self.data['gasConcentration'][i][2]])
-			self.strA.append([self.data['airClarity'][i][0]			,self.data['airClarity'][i][1]		,self.data['airClarity'][i][2]])
+		self.year = []
+		self.month = []
+		self.day = []
+		self.time_hour = []
+		self.temp_v = []
+		self.temp_s = []
+		self.db = MySQLdb.connect("127.0.0.1","root","root","topic" )
+		self.cursor = self.db.cursor()
+#		self.strT = []
+#		self.strH = []
+#		self.strG = []
+#		self.strA = []
+#		with open('from.json', 'r') as f:
+#			self.data = json.load(f,"UTF-8")
+#
+#		for i in range(0,4,1):
+#			self.strT.append([self.data['temperature'][i][0]		,self.data['temperature'][i][1]		,self.data['temperature'][i][2]])
+#			self.strH.append([self.data['humidity'][i][0]			,self.data['humidity'][i][1]		,self.data['humidity'][i][2]])
+#			self.strG.append([self.data['gasConcentration'][i][0]	,self.data['gasConcentration'][i][1],self.data['gasConcentration'][i][2]])
+#			self.strA.append([self.data['airClarity'][i][0]			,self.data['airClarity'][i][1]		,self.data['airClarity'][i][2]])
 
 		self.render = web.template.render("view")
 
 	def GET(self):
 		#print(self.strT)
 		#time.sleep(5)
-		return self.render.EnvironmentPastValueTable(self.strT, self.strH, self.strG, self.strA)
+		#$def with(str, date_y, date_m, date_d, time, data_v, data_s)
+		#------MySQL-----
+		sql = "SELECT year, month, day, time_hour, temp_v ,temp_s FROM monitoring_value"
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.temp_v.append(row[4])
+   			self.temp_s.append(row[5])
+   		for i in range(0,10):
+   			print(self.year[i]+"/"+self.month[i]+"/"+self.day[i]+" Time:"
+   				+self.time_hour[i]+":00---!!!^_^")
+   		self.db.close()
+
+		#return self.render.EnvironmentPastValueTable("溫度", "2017", "9", "1", "13", "25", "涼爽")
+
 		
 	def POST(self):
 		i = web.input()
@@ -184,9 +220,9 @@ class EnvironmentPastValueFigure:
 	def GET(self):
 		render = web.template.render("view")
 		return render.EnvironmentPastValueFigure()
-#################################
-#		 Safety monitoring		#
-#################################
+							#################################
+							#		 Safety monitoring		#
+							#################################
 class SafetyDoorLock:
 	def GET(self):
 		render = web.template.render("view")
@@ -199,14 +235,12 @@ class SafetyEventRecord:
 	def GET(self):
 		render = web.template.render("view")
 		return render.SafetyEventRecord()
-#############################
-#		System program		#
-#############################
-class SystemMember:
-	def GET(self):
-		render = web.template.render("view")
-		return render.SystemMember()
-		##################
+
+		
+							#############################
+							#		System program		#
+							#############################
+	# 1__Member__
 class SystemMemberQuire:
 	def GET(self):
 		render = web.template.render("view")
@@ -223,14 +257,50 @@ class SystemMemberDeiete:
 	def GET(self):
 		render = web.template.render("view")
 		return render.SystemMemberDeiete()
-		##################
+	# 2__Event__
 class SystemEvent:
 	def GET(self):
 		render = web.template.render("view")
 		return render.SystemEvent()
-class SystemReport:
+	# 3__Report__
+class SystemReportDay:
 	def GET(self):
 		render = web.template.render("view")
-		return render.SystemReport()
+		return render.SystemReportDay()
+
+	def POST(self):
+		i = web.input(Checkbox=[])
+		Y, M, D = i.Y, i.M, i.D
+		cks = i.get('Checkbox','')
+		print(cks)
+		print(Y+">>"+M+">>"+D)
+		return render.SystemReportDay()
+
+class SystemReportWeek:
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemReportWeek()
+
+	def POST(self):
+		i = web.input(Checkbox=[])
+		Y, M, D = i.Y, i.M, i.D
+		cks = i.get('Checkbox','')
+		print(cks)
+		print(Y+">>"+M+">>"+D)
+		return render.SystemReportWeek()
+
+class SystemReportMonth:
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemReportMonth()
+
+	def POST(self):
+		i = web.input(Checkbox=[])
+		Y, M = i.Y, i.M
+		cks = i.get('Checkbox','')
+		print(cks)
+		print(Y+">>"+M)
+		return render.SystemReportMonth()
+
 if __name__ == '__main__':
 	app.run()

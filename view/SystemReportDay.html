@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- 以下這5行是引用bootstrap及jquery CDN (Content Delivery Network)的標準動作 -->
+    <meta charset="utf-8"> <!-- 指定內文的編碼，若要顯示中文，通常用utf-8這個unicode編碼 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/ui">
+	<title>居家物聯網監控系統</title>
+
+</head>
+<body class="output container">
+
+<!--title-->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">居家物聯網監控系統</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout">登出</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="main">
+
+    <div class="left">
+        <!--環境監控-->
+        <div class="col-sm-2 leftfloat">
+            <div class="list-group">
+                <a class="list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+            </div>
+        </div>
+        <!--安全監控-->
+        <div class="col-sm-2 leftfloat">
+            <div class="list-group">
+                <a class="list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="list-group-item">門鎖</a>
+                <a href="/Monitor"          class="list-group-item">監視器</a>
+                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+            </div>
+        </div>
+        <!--系統設定-->
+        <div class="col-sm-2 leftfloat">
+            <div class="list-group">
+                <a class="list-group-item active">系統設定</a>
+                <a href="/Member/Quire" class="list-group-item">成員</a>
+                <a href="/Event" class="list-group-item">事件</a>
+                <a href="/SystemReportDay" class="list-group-item">報表</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="right">
+        <!--選擇生成報表-->
+        <div class="SR">
+            <div class="SR_t">
+                <div class="text_1">選擇生成報表</div>
+                <div class="SR_t_R">
+                    <!--// 放分頁的 HTML 物件-->
+                    <span id='table_page1'></span>
+                </div>
+            </div>
+            <br>
+            <center>
+                <a class="btn btn-default" href="/SystemReportDay" role="button">日報表</a>
+                <a class="btn btn-default" href="/SystemReportWeek" role="button">周報表</a>
+                <a class="btn btn-default" href="/SystemReportMonth" role="button">月報表</a>
+            </center> 
+        </div>
+
+        <!--日報表-->
+        <div class="DR">
+            <div class="DR_t">
+                <div class="text_1">日報表</div>
+            </div>
+            <div class="DR_b">
+                <form action="/SystemReportDay" method="POST" class="form-horizontal DR_form">
+                    <!--年-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">選擇年</label>
+                        <div class="col-sm-10">
+                            <select name="Y" class="form-control">
+                                <option value="2017">2017年</option>
+                                <option value="2018">2018年</option>
+                                <option value="2019">2019年</option>
+                                <option value="Yall">All</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--月-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">選擇月</label>
+                        <div class="col-sm-10">
+                            <select name="M" class="form-control">
+                                <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                                <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                                <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                                <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                                <option value="Mall">All</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--日-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">選擇日</label>
+                        <div class="col-sm-10">
+                            <select name="D" class="form-control">
+                                <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                                <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                                <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                                <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                                <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                                <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                                <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                                <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                                <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                                <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                                <option value="31">31日</option>
+                                <option value="Dall">All</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--生成資料-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">選擇生成資料</label>
+                        <div class="col-sm-10">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" name="Checkbox" value="option1"> 溫度         </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox2" name="Checkbox" value="option2"> 濕度         </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox3" name="Checkbox" value="option3"> 可燃氣濃度   </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox4" name="Checkbox" value="option4"> 空氣清晰度   </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox5" name="Checkbox" value="option5"> 電流         </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox6" name="Checkbox" value="option6"> 累計度數     </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">確認</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+               
+    </div>
+    
+
+</div>
+
+</body>
+</html>

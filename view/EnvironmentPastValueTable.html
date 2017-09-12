@@ -1,4 +1,4 @@
-$def with(T,H,G,A)
+$def with(str, date_y, date_m, date_d, time, data_v, data_s)
 $var content_type: text/html
 <!DOCTYPE html>
 <html>
@@ -141,7 +141,7 @@ $var content_type: text/html
                 <a class="list-group-item active">系統設定</a>
                 <a href="/Member/Quire" class="list-group-item">成員</a>
                 <a href="/Event" class="list-group-item">事件</a>
-                <a href="/Report" class="list-group-item">報表</a>
+                <a href="/SystemReportDay" class="list-group-item">報表</a>
             </div>
         </div>
     </div>
@@ -207,14 +207,14 @@ $var content_type: text/html
                             <th>狀態</th>
                         </tr>
                     </thead>
-                    $for a in T:
+                    $for i in range(0,23):
                         <tbody>
                             <tr>
-                                <td>$a[0]</td>
-                                <td>2018/10/$a[1]</td>
-                                <td>Am $a[2]:00</td>
-                                <td>20度</td>
-                                <td>涼爽</td>
+                                <td>$a+1</td>
+                                <td>$date_y[$i]/$date_m[$i]/$date_d[$i]</td>
+                                <td>Am $time[$i]:00</td>
+                                <td>$data_v</td>
+                                <td>$data_s</td>
                             </tr>
                         </tbody>
                     <!---->
