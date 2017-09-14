@@ -1,10 +1,14 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*-coding:utf-8 -*-
 import web
 import json
 import time
 import rsa
 import MySQLdb
+
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 urls = (
 	'/ui', 'ui',
@@ -34,7 +38,7 @@ web.config.debug = False
 app = web.application(urls, globals())
 session = web.session.Session(app, web.session.DiskStore('sessions'))      
 
-							#####################
+#################################################
 							#		CSS,JS		#
 							#####################
 class ui:
@@ -46,8 +50,7 @@ class jquerytablepage:
 		render = web.template.render("css_js")
 		return render.jqueryTablepage()
 
-
-							#############################
+#########################################################
 							#		Log in, log out		#(ERROR!!!)
 							#############################
 class Login:
@@ -96,8 +99,7 @@ class Logout:
         session.logged_in = False
         raise web.seeother('/')
 
-
-							#########################################
+#####################################################################
 							#		Environmental monitoring		#		   
 							#########################################
 class EnvironmentCurrentState:
@@ -117,37 +119,28 @@ class EnvironmentCurrentState:
 			return render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
         
 		raise web.seeother('/')
-
 class EnvironmentPastValueTable:
 	def __init__(self):
+		#Value definition
 		self.year = []
 		self.month = []
 		self.day = []
 		self.time_hour = []
+		self.humidity_v = []
+		self.humidity_s = []
+		self.cgc_v = []
+		self.cgc_s = []
+		self.ac_v = []
+		self.ac_s = []
 		self.temp_v = []
 		self.temp_s = []
-		self.db = MySQLdb.connect("127.0.0.1","root","root","topic" )
+		#Databse definition
+		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
 		self.cursor = self.db.cursor()
-#		self.strT = []
-#		self.strH = []
-#		self.strG = []
-#		self.strA = []
-#		with open('from.json', 'r') as f:
-#			self.data = json.load(f,"UTF-8")
-#
-#		for i in range(0,4,1):
-#			self.strT.append([self.data['temperature'][i][0]		,self.data['temperature'][i][1]		,self.data['temperature'][i][2]])
-#			self.strH.append([self.data['humidity'][i][0]			,self.data['humidity'][i][1]		,self.data['humidity'][i][2]])
-#			self.strG.append([self.data['gasConcentration'][i][0]	,self.data['gasConcentration'][i][1],self.data['gasConcentration'][i][2]])
-#			self.strA.append([self.data['airClarity'][i][0]			,self.data['airClarity'][i][1]		,self.data['airClarity'][i][2]])
-
+		#Template definition
 		self.render = web.template.render("view")
 
 	def GET(self):
-		#print(self.strT)
-		#time.sleep(5)
-		#$def with(str, date_y, date_m, date_d, time, data_v, data_s)
-		#------MySQL-----
 		sql = "SELECT year, month, day, time_hour, temp_v ,temp_s FROM monitoring_value"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
@@ -158,69 +151,104 @@ class EnvironmentPastValueTable:
    			self.time_hour.append(row[3])
    			self.temp_v.append(row[4])
    			self.temp_s.append(row[5])
-   		for i in range(0,10):
-   			print(self.year[i]+"/"+self.month[i]+"/"+self.day[i]+" Time:"
-   				+self.time_hour[i]+":00---!!!^_^")
    		self.db.close()
-
-		#return self.render.EnvironmentPastValueTable("溫度", "2017", "9", "1", "13", "25", "涼爽")
+		return self.render.EnvironmentPastValueTable("溫度", self.year, self.month, self.day, self.time_hour, self.temp_v, self.temp_s)
 
 		
 	def POST(self):
-		i = web.input()
+		self.i = web.input()
 
-		if i.Submit == "temperature":
-			self.temperature(i.Y, i.M, i.D)
-			#print(self.strT)
-			#time.sleep(5)
-			return self.render.EnvironmentPastValueTable(self.strT, self.strH, self.strG, self.strA)
-		elif i.Submit == "humidity":
-			self.humidity(i.Y, i.M, i.D)
-			return self.render.EnvironmentPastValueTable(self.strT, self.strH, self.strG, self.strA)
-		elif i.Submit == "gasConcentration":
-			self.gasConcentration(i.Y, i.M, i.D)
-			return self.render.EnvironmentPastValueTable(self.strT, self.strH, self.strG, self.strA)
-		elif i.Submit == "airClarity":
-			self.airClarity(i.Y, i.M, i.D)
-			return self.render.EnvironmentPastValueTable(self.strT, self.strH, self.strG, self.strA)
-	def temperature(self, Y, M, D):
-		self.strT = []
+		if self.i.index_name == "temp":
+			self.temp(self.i.Y, self.i.M, self.i.D)
+			return self.render.EnvironmentPastValueTable("溫度", self.year, self.month, self.day, self.time_hour, self.temp_v, self.temp_s)
+		elif self.i.index_name == "humidity":
+			self.humidity(self.i.Y, self.i.M, self.i.D)
+			return self.render.EnvironmentPastValueTable("濕度", self.year, self.month, self.day, self.time_hour, self.humidity_v, self.humidity_s)
+		elif self.i.index_name == "cgc":
+			self.cgc(self.i.Y, self.i.M, self.i.D)
+			return self.render.EnvironmentPastValueTable("可燃氣濃度", self.year, self.month, self.day, self.time_hour, self.cgc_v, self.cgc_s)
+		elif self.i.index_name == "ac":
+			self.ac(self.i.Y, self.i.M, self.i.D)
+			return self.render.EnvironmentPastValueTable("空氣清晰度", self.year, self.month, self.day, self.time_hour, self.ac_v, self.ac_s)
 
+	def temp(self, Y, M, D):
+		sql = "SELECT year, month, day, time_hour, temp_v ,temp_s FROM monitoring_value WHERE year = \'" +Y+"\'"
+		if M in "all":
+			sql += " AND month = \'" + M + "\'"
+		if D in "all":
+			sql += " AND day = \'"   + D + "\'"
 
-		for i in range(1, 8, 1):
-			self.strT.append([i, 9+i, D])
-		web.setcookie('strCT', self.strT, 60*60*24*365)			
-		#print(self.strT)
-		#for a in self.strT:
-		#	print(str(a[0])+"__"+str(a[1])+"__"+str(a[2])+"\n")
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.temp_v.append(row[4])
+   			self.temp_s.append(row[5])
+   		self.db.close()
 		
-
 	def humidity(self, Y, M, D):
-		for i in self.strH:
-			i.pop()
+		sql = "SELECT year, month, day, time_hour, humidity_v ,humidity_s FROM monitoring_value WHERE year = \'" +Y+"\'"
+		if M in "all":
+			sql += " AND month = \'" + M + "\'"
+		if D in "all":
+			sql += " AND day = \'"   + D + "\'"
 
-		for i in range(1, 8, 1):
-			self.strH.append([i, 9+i, 7+i])
-		web.setcookie('strCH', self.strH, 60*60*24*365)
-	def gasConcentration(self, Y, M, D):
-		for i in self.strG:
-			i.pop()
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.humidity_v.append(row[4])
+   			self.humidity_s.append(row[5])
+   		self.db.close()
 
-		for i in range(1, 8, 1):
-			self.strG.append([i, 9+i, 7+i])
-		web.setcookie('strCG', self.strG, 60*60*24*365)
-	def airClarity(self, Y, M, D):
-		for i in self.strA:
-			i.pop()
+	def cgc(self, Y, M, D):
+		sql = "SELECT year, month, day, time_hour, cgc_v ,cgc_s FROM monitoring_value WHERE year = \'" +Y+"\'"
+		if M in "all":
+			sql += " AND month = \'" + M + "\'"
+		if D in "all":
+			sql += " AND day = \'"   + D + "\'"
 
-		for i in range(1, 8, 1):
-			self.strA.append([i, 9+i, 7+i])
-		web.setcookie('strCA', self.strA, 60*60*24*365)
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.cgc_v.append(row[4])
+   			self.cgc_s.append(row[5])
+   		self.db.close()
+
+	def ac(self, Y, M, D):
+		sql = "SELECT year, month, day, time_hour, ac_v ,ac_s FROM monitoring_value WHERE year = \'" +Y+"\'"
+		if M in "all":
+			sql += " AND month = \'" + M + "\'"
+		if D in "all":
+			sql += " AND day = \'"   + D + "\'"
+
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.ac_v.append(row[4])
+   			self.ac_s.append(row[5])
+   		self.db.close()
+
 class EnvironmentPastValueFigure:
 	def GET(self):
 		render = web.template.render("view")
 		return render.EnvironmentPastValueFigure()
-							#################################
+
+#############################################################
 							#		 Safety monitoring		#
 							#################################
 class SafetyDoorLock:
@@ -235,12 +263,11 @@ class SafetyEventRecord:
 	def GET(self):
 		render = web.template.render("view")
 		return render.SafetyEventRecord()
-
 		
-							#############################
+#########################################################
 							#		System program		#
 							#############################
-	# 1__Member__
+#---# 1__Member__
 class SystemMemberQuire:
 	def GET(self):
 		render = web.template.render("view")
@@ -257,7 +284,8 @@ class SystemMemberDeiete:
 	def GET(self):
 		render = web.template.render("view")
 		return render.SystemMemberDeiete()
-	# 2__Event__
+
+#---# 2__Event__
 class SystemEvent:
 	def GET(self):
 		render = web.template.render("view")
@@ -275,7 +303,6 @@ class SystemReportDay:
 		print(cks)
 		print(Y+">>"+M+">>"+D)
 		return render.SystemReportDay()
-
 class SystemReportWeek:
 	def GET(self):
 		render = web.template.render("view")
@@ -288,7 +315,6 @@ class SystemReportWeek:
 		print(cks)
 		print(Y+">>"+M+">>"+D)
 		return render.SystemReportWeek()
-
 class SystemReportMonth:
 	def GET(self):
 		render = web.template.render("view")

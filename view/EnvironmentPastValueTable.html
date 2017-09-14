@@ -2,8 +2,7 @@ $def with(str, date_y, date_m, date_d, time, data_v, data_s)
 $var content_type: text/html
 <!DOCTYPE html>
 <html>
-<head>
-    
+<head>  
 	<!-- 以下這5行是引用bootstrap及jquery CDN (Content Delivery Network)的標準動作 -->
     <meta charset="utf-8"> <!-- 指定內文的編碼，若要顯示中文，通常用utf-8這個unicode編碼 -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -95,7 +94,6 @@ $var content_type: text/html
 	        };
         })(jQuery);
     </script>    
-
 </head>
 <body class="output container">
 
@@ -153,24 +151,24 @@ $var content_type: text/html
                 <div class="E_table_t_L">
                     <!--// 下拉是選單(年/月/日)-->
                     <form action="/PastValueTable" method="POST">
-                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
-                            <option value="#">1.溫度</option>
-                            <option value="#">2.濕度</option>
-                            <option value="#">3.可燃氣濃度</option>
-                            <option value="#">4.空氣清晰度</option>
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="index_name">
+                            <option value="temp">       1.溫度</option>
+                            <option value="humidity">   2.濕度</option>
+                            <option value="cgc">        3.可燃氣濃度</option>
+                            <option value="ac">         4.空氣清晰度</option>
                         </select>
                         <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
                             <option value="2017">2017年</option>
                             <option value="2018">2018年</option>
                             <option value="2019">2019年</option>
-                            <option value="Yall">All</option>
+                            <option value="all">All</option>
                         </select>
                         <select style="width:70px;float:left;" class=" form-control input-sm" name="M">
                             <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
                             <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
                             <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
                             <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
-                            <option value="Mall">All</option>
+                            <option value="all">All</option>
                         </select>
                         <select style="width:70px;float:left;" class=" form-control input-sm" name="D">
                             <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
@@ -184,7 +182,7 @@ $var content_type: text/html
                             <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
                             <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
                             <option value="31">31日</option>
-                            <option value="Dall">All</option>
+                            <option value="all">All</option>
                         </select>
                         <button type="submit" class="btn btn-default btn-sm" value="temperature" name="Submit">送出</button>
                     </form>
@@ -203,18 +201,18 @@ $var content_type: text/html
                             <th>項次</th>
                             <th>日期</th>
                             <th>時間</th>
-                            <th>溫度</th>
+                            <th>$str</th>
                             <th>狀態</th>
                         </tr>
                     </thead>
-                    $for i in range(0,23):
+                    $for i in range(0,len(date_y)):
                         <tbody>
                             <tr>
-                                <td>$a+1</td>
-                                <td>$date_y[$i]/$date_m[$i]/$date_d[$i]</td>
-                                <td>Am $time[$i]:00</td>
-                                <td>$data_v</td>
-                                <td>$data_s</td>
+                                <td>$(i+1)</td>
+                                <td>$date_y[i]/$date_m[i]/$date_d[i]</td>
+                                <td>Am $time[i]:00</td>
+                                <td>$data_v[i]</td>
+                                <td>$data_s[i]</td>
                             </tr>
                         </tbody>
                     <!---->
