@@ -5,6 +5,7 @@ import json
 import time
 import rsa
 import MySQLdb
+import xlwt
 
 import sys
 reload(sys)
@@ -153,8 +154,7 @@ class EnvironmentPastValueTable:
    			self.temp_s.append(row[5])
    		self.db.close()
 		return self.render.EnvironmentPastValueTable("溫度", self.year, self.month, self.day, self.time_hour, self.temp_v, self.temp_s)
-
-		
+	
 	def POST(self):
 		self.i = web.input()
 
@@ -173,11 +173,12 @@ class EnvironmentPastValueTable:
 
 	def temp(self, Y, M, D):
 		sql = "SELECT year, month, day, time_hour, temp_v ,temp_s FROM monitoring_value WHERE year = \'" +Y+"\'"
-		if M in "all":
+		if M not in "all":
 			sql += " AND month = \'" + M + "\'"
-		if D in "all":
+		if D not in "all":
 			sql += " AND day = \'"   + D + "\'"
-
+		print(sql)
+		print(D)
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
    		for row in data:
@@ -242,7 +243,6 @@ class EnvironmentPastValueTable:
    			self.ac_v.append(row[4])
    			self.ac_s.append(row[5])
    		self.db.close()
-
 class EnvironmentPastValueFigure:
 	def GET(self):
 		render = web.template.render("view")
@@ -292,21 +292,127 @@ class SystemEvent:
 		return render.SystemEvent()
 	# 3__Report__
 class SystemReportDay:
+	def __init__(self):
+		#Value definition
+		self.year = []
+		self.month = []
+		self.day = []
+		self.time_hour = []
+		self.humidity_v = []
+		self.humidity_s = []
+		self.cgc_v = []
+		self.cgc_s = []
+		self.ac_v = []
+		self.ac_s = []
+		self.temp_v = []
+		self.temp_s = []
+		#Databse definition
+		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+		#Dictionary
+		self.dictionarSQL = {	'1':'temp', 
+								'2':'humidity',
+								'3':'cgc',
+								'4':'ac',
+								'5':'acurrent', 
+								'6':'current'
+						 	}
+		self.dictionarName = {	'1_v': "溫度", 
+								'1_s': "狀態",
+								'2_v': "濕度", 
+								'2_s': "狀態",
+								'3_v': "可燃氣濃度", 
+								'3_s': "狀態",
+								'4_v': "空氣清晰度", 
+								'4_s': "狀態",
+						 	}
+		self.dictionarClass = {	'1_v': self.temp_v, 
+								'1_s': self.temp_s,
+								'2_v': self.humidity_v, 
+								'2_s': self.humidity_s,
+								'3_v': self.cgc_v, 
+								'3_s': self.cgc_s,
+								'4_v': self.ac_v, 
+								'4_s': self.ac_s,
+						 	}
+
 	def GET(self):
-		render = web.template.render("view")
-		return render.SystemReportDay()
+		return self.render.SystemReportDay()
 
 	def POST(self):
 		i = web.input(Checkbox=[])
 		Y, M, D = i.Y, i.M, i.D
 		cks = i.get('Checkbox','')
-		print(cks)
-		print(Y+">>"+M+">>"+D)
-		return render.SystemReportDay()
+		str_cks = ""
+		for ck in cks:
+			str_cks +=", " + self.dictionarSQL[ck] + "_v, " + self.dictionarSQL[ck] + "_s" 
+		sql = "SELECT year, month, day, time_hour" + str_cks + " FROM monitoring_value"
+		print(sql)
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			num = 4
+   			for ck in cks:
+   				self.dictionarClass[str(ck)+"_v"].append(row[num])
+   				self.dictionarClass[str(ck)+"_s"].append(row[num+1])
+   				num +=2
+   		self.db.close()
+		
+		#創建workbook和sheet對象
+		workbook = xlwt.Workbook() #註意Workbook的開頭W要大寫
+		sheet1 = workbook.add_sheet('sheet1',cell_overwrite_ok=True)
+		#向sheet頁中寫入數據
+		sheet1.write(0,0, "年".decode('utf-8'))
+		sheet1.write(0,1, "月".decode('utf-8'))
+		sheet1.write(0,2, "日".decode('utf-8'))
+		sheet1.write(0,3, "時間(時)".decode('utf-8'))
+   		num = 4
+   		for ck in cks:
+   			sheet1.write(0, num	 , self.dictionarName[str(ck)+"_v"].decode('utf-8'))
+			sheet1.write(0, num+1, self.dictionarName[str(ck)+"_s"].decode('utf-8'))
+   			num +=2
+		for c in range(1,len(self.year)):
+			sheet1.write(c,0, self.year[c-1])
+			sheet1.write(c,1, self.month[c-1])
+			sheet1.write(c,2, self.day[c-1])
+			sheet1.write(c,3, self.time_hour[c-1])
+			l = 4
+			for ck in cks:
+				sheet1.write(c,l  , self.dictionarClass[str(ck)+"_v"][c-1])
+				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
+   				l += 2
+		#保存該excel文件,有同名文件時直接覆蓋
+		workbook.save('C:\Users\ASUS\Desktop\sss.xls')
+		print("創建excel文件完成!".decode('utf-8'))
+
 class SystemReportWeek:
+	def __init__(self):
+		#Value definition
+		self.year = []
+		self.month = []
+		self.day = []
+		self.time_hour = []
+		self.humidity_v = []
+		self.humidity_s = []
+		self.cgc_v = []
+		self.cgc_s = []
+		self.ac_v = []
+		self.ac_s = []
+		self.temp_v = []
+		self.temp_s = []
+		#Databse definition
+		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
 	def GET(self):
-		render = web.template.render("view")
-		return render.SystemReportWeek()
+		return self.render.SystemReportWeek()
 
 	def POST(self):
 		i = web.input(Checkbox=[])
@@ -314,11 +420,29 @@ class SystemReportWeek:
 		cks = i.get('Checkbox','')
 		print(cks)
 		print(Y+">>"+M+">>"+D)
-		return render.SystemReportWeek()
+		return self.render.SystemReportWeek()
 class SystemReportMonth:
+	def __init__(self):
+		#Value definition
+		self.year = []
+		self.month = []
+		self.day = []
+		self.time_hour = []
+		self.humidity_v = []
+		self.humidity_s = []
+		self.cgc_v = []
+		self.cgc_s = []
+		self.ac_v = []
+		self.ac_s = []
+		self.temp_v = []
+		self.temp_s = []
+		#Databse definition
+		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
 	def GET(self):
-		render = web.template.render("view")
-		return render.SystemReportMonth()
+		return self.render.SystemReportMonth()
 
 	def POST(self):
 		i = web.input(Checkbox=[])
@@ -326,7 +450,7 @@ class SystemReportMonth:
 		cks = i.get('Checkbox','')
 		print(cks)
 		print(Y+">>"+M)
-		return render.SystemReportMonth()
+		return self.render.SystemReportMonth()
 
 if __name__ == '__main__':
 	app.run()
