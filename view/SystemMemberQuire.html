@@ -1,3 +1,4 @@
+$def with(A, P, H, E)
 <!DOCTYPE html>
 <html>
 <head>
@@ -160,57 +161,23 @@
                     <!---->
                     <thead>
                         <tr>
-                            <th width="50px" >項次</th>
-                            <th width="150px">帳號</th>
-                            <th width="150px">密碼</th>
-                            <th width="200px">電話</th>
+                            <th>項次</th>
+                            <th>帳號</th>
+                            <th>密碼</th>
+                            <th>電話</th>
                             <th>電子郵件</th>
                         </tr>
                     </thead>
-                    <tbody>
-		                <tr>
-                            <td>1</td>
-                            <td>a12345</td>
-                            <td>asbab</td>
-                            <td>0987797760</td>
-                            <td>a57345734@yahoo.com.tw</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>a12345</td>
-                            <td>asbab</td>
-                            <td>0987797760</td>
-                            <td>a57345734@yahoo.com.tw</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>a12345</td>
-                            <td>asbab</td>
-                            <td>0987797760</td>
-                            <td>a57345734@yahoo.com.tw</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>a12345</td>
-                            <td>asbab</td>
-                            <td>0987797760</td>
-                            <td>a57345734@yahoo.com.tw</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>a12345</td>
-                            <td>asbab</td>
-                            <td>0987797760</td>
-                            <td>a57345734@yahoo.com.tw</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>a12345</td>
-                            <td>asbab</td>
-                            <td>0987797760</td>
-                            <td>a57345734@yahoo.com.tw</td>
-                        </tr>
-		            </tbody>
+                    $for i in range(0,len(A)):
+                        <tbody>
+                            <tr>
+                                <td>$(i+1)</td>
+                                <td>$A[i]</td>
+                                <td>$P[i]</td>
+                                <td>$H[i]</td>
+                                <td>$E[i]</td>
+                            </tr>
+                        </tbody>
                     <!---->
                 </table>
         </div>

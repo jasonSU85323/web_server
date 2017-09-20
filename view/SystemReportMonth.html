@@ -87,11 +87,12 @@
                 <div class="text_1">月報表</div>
             </div>
             <div class="DR_b">
-                <form action="/SystemReportMonth" class="form-horizontal DR_form">
+                <form action="/SystemReportMonth" method="POST" class="form-horizontal DR_form">
+                    <!--年-->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇年</label>
                         <div class="col-sm-10">
-                            <select class="form-control">
+                            <select name="Y" class="form-control">
                                 <option value="2017">2017年</option>
                                 <option value="2018">2018年</option>
                                 <option value="2019">2019年</option>
@@ -99,10 +100,11 @@
                             </select>
                         </div>
                     </div>
+                    <!--月-->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇月</label>
                         <div class="col-sm-10">
-                            <select class="form-control">
+                            <select name="M" class="form-control">
                                 <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
                                 <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
                                 <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
@@ -111,26 +113,27 @@
                             </select>
                         </div>
                     </div>
+                    <!--生成資料-->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇生成資料</label>
                         <div class="col-sm-10">
                             <label class="checkbox-inline">
-                                <input type="checkbox" id="inlineCheckbox1" name="Checkbox" alue="temp"> 
+                                <input type="checkbox" id="inlineCheckbox1" name="Checkbox" value="1"> 
                                     溫度</label>
                             <label class="checkbox-inline">
-                                <input type="checkbox" id="inlineCheckbox2" name="Checkbox" value="humidity">
+                                <input type="checkbox" id="inlineCheckbox2" name="Checkbox" value="2">
                                     濕度</label>
                             <label class="checkbox-inline">
-                                <input type="checkbox" id="inlineCheckbox3" name="Checkbox" value="cgc">
+                                <input type="checkbox" id="inlineCheckbox3" name="Checkbox" value="3">
                                     可燃氣濃度</label>
                             <label class="checkbox-inline">
-                                <input type="checkbox" id="inlineCheckbox1" name="Checkbox" value="ac">
+                                <input type="checkbox" id="inlineCheckbox1" name="Checkbox" value="4">
                                     空氣清晰度</label>
                             <label class="checkbox-inline">
-                                <input type="checkbox" id="inlineCheckbox2" name="Checkbox" value="current">
+                                <input type="checkbox" id="inlineCheckbox2" name="Checkbox" value="5">
                                     電流</label>
                             <label class="checkbox-inline">
-                                <input type="checkbox" id="inlineCheckbox3" name="Checkbox" value="acurrent">
+                                <input type="checkbox" id="inlineCheckbox3" name="Checkbox" value="6">
                                     累計度數</label>
                         </div>
                     </div>

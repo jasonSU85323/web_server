@@ -74,28 +74,27 @@
                 <div class="text_1">修改</div>
             </div>
             <div class="right_MemberMod_t_b">
-                <form class="form-horizontal right_MemberMod_form">
+                <form action="/Member/Modify" method="POST" class="form-horizontal right_MemberMod_form">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">修改項次</label>
+                        <label class="col-sm-2 control-label">選擇帳號</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
+                            <input name="account" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">設定項目</label>
                         <div class="col-sm-10">
-                            <select class="form-control">
-                                <option>帳號</option>
-                                <option>密碼</option>
-                                <option>電話</option>
-                                <option>電子郵件</option>
+                            <select name="setname" class="form-control">
+                                <option value="passwore">密碼</option>
+                                <option value="phone">電話</option>
+                                <option value="email">電子郵件</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">修改內容</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="更新內容...">
+                            <input name="settxt" type="text" class="form-control" placeholder="更新內容...">
                         </div>
                     </div>
                     

@@ -73,11 +73,11 @@
                 <div class="text_1">刪除</div>
             </div>
             <div class="right_MemberAdd_t_b">
-                <form class="form-horizontal right_MemberDel_form">
+                <form action="/Member/Delete" method="POST" class="form-horizontal right_MemberDel_form">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">選擇項次</label>
+                        <label class="col-sm-2 control-label">選擇帳號</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
+                            <input name="account" type="text" class="form-control">
                         </div>
                     </div>
                     

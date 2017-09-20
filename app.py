@@ -143,8 +143,15 @@ class Login:
 		
 		print(password)
 	def POST(self):
+#		session.logged_in = True
+#		raise web.seeother('/CurrentState')
+		i = web.input()
+		print(i.user)
+		print(i.password)
+
 		session.logged_in = True
 		raise web.seeother('/CurrentState')
+
 #		if i.user == '1' and i.password =='1':
 #			session.logged_in = True
 #			raise web.seeother('/CurrentState')
@@ -190,14 +197,13 @@ class EnvironmentCurrentState:
 		self.A = 250
 		self.C = 0.6
 		self.CD = 32.1
+		self.render = web.template.render("view")
 	
 	def GET(self):
-		render = web.template.render("view")
+		if session.logged_in == False:
+			raise web.seeother('/')
 		
-		if session.get('logged_in', False):
-			return render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
-        
-		raise web.seeother('/')
+		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)	
 class EnvironmentPastValueTable:
 	def __init__(self):
 		#Value definition
@@ -214,12 +220,22 @@ class EnvironmentPastValueTable:
 		self.temp_v = []
 		self.temp_s = []
 		#Databse definition
-		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
 		self.cursor = self.db.cursor()
 		#Template definition
 		self.render = web.template.render("view")
 
 	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+
 		sql = "SELECT year, month, day, time_hour, temp_v ,temp_s FROM monitoring_value"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
@@ -231,6 +247,7 @@ class EnvironmentPastValueTable:
    			self.temp_v.append(row[4])
    			self.temp_s.append(row[5])
    		self.db.close()
+
 		return self.render.EnvironmentPastValueTable("溫度", self.year, self.month, self.day, self.time_hour, self.temp_v, self.temp_s)
 	
 	def POST(self):
@@ -322,46 +339,177 @@ class EnvironmentPastValueTable:
    			self.ac_s.append(row[5])
    		self.db.close()
 class EnvironmentPastValueFigure:
+	def __init__(self):
+		self.render = web.template.render("view")
 	def GET(self):
-		render = web.template.render("view")
-		return render.EnvironmentPastValueFigure()
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.EnvironmentPastValueFigure()
 
 #############################################################
 							#		 Safety monitoring		#
 							#################################
 class SafetyDoorLock:
+	def __init__(self):
+		self.render = web.template.render("view")
 	def GET(self):
-		render = web.template.render("view")
-		return render.SafetyDoorLock()
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyDoorLock()
 class SafetyMonitor:
+	def __init__(self):
+		self.render = web.template.render("view")
 	def GET(self):
-		render = web.template.render("view")
-		return render.SafetyMonitor()
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyMonitor()
 class SafetyEventRecord:
+	def __init__(self):
+		self.render = web.template.render("view")
 	def GET(self):
-		render = web.template.render("view")
-		return render.SafetyEventRecord()
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyEventRecord()
 		
 #########################################################
 							#		System program		#
 							#############################
 #---# 1__Member__
 class SystemMemberQuire:
+	def __init__(self):
+		#Value definition
+		self.number = []
+		self.password = []
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+
 	def GET(self):
-		render = web.template.render("view")
-		return render.SystemMemberQuire()
+		if session.logged_in == False:
+			raise web.seeother('/')
+
+		sql = "SELECT account, passwore, phone, email FROM member_information"
+
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.number.append(row[0])
+   			self.password.append(row[1])
+   			self.phone.append(row[2])
+   			self.email.append(row[3])
+   		self.db.close()
+
+		return self.render.SystemMemberQuire(self.number, self.password, self.phone, self.email)
 class SystemMemberAdd:
+	def __init__(self):
+		#Value definition
+		self.number = []
+		self.password = []
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
 	def GET(self):
 		render = web.template.render("view")
+		if session.logged_in == False:
+			raise web.seeother('/')
 		return render.SystemMemberAdd()
+	def POST(self):
+		self.i = web.input()
+		sql = "INSERT INTO member_information(account, passwore, phone, email) VALUES "
+		sql += "('" + self.i.account +"', '"+ self.i.password +"', '"+ self.i.phone +"', '"+self.i.email+"')" 
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+		self.db.close()
+		raise web.seeother('/Member/Quire')
 class SystemMemberModify:
+	def __init__(self):
+		#Value definition
+		self.number = []
+		self.password = []
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
 	def GET(self):
 		render = web.template.render("view")
+		if session.logged_in == False:
+			raise web.seeother('/')
 		return render.SystemMemberModify()
+	def POST(self):
+		self.i = web.input()
+		sql = "UPDATE member_information SET "
+		sql += self.i.setname + "='" + self.i.settxt + "' WHERE account = '" + self.i.account + "'"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+		self.db.close()
+		raise web.seeother('/Member/Quire')
 class SystemMemberDeiete:
+	def __init__(self):
+		#Value definition
+		self.number = []
+		self.password = []
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
 	def GET(self):
 		render = web.template.render("view")
+		if session.logged_in == False:
+			raise web.seeother('/')
 		return render.SystemMemberDeiete()
+	def POST(self):
+		self.i = web.input()
+		sql = "DELETE FROM member_information "
+		sql += "WHERE account = '" + self.i.account + "'"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+		self.db.close()
+		raise web.seeother('/Member/Quire')
 
 #---# 2__Report__
 class SystemReportDay:
@@ -414,11 +562,20 @@ class SystemReportDay:
 								'3_s': self.cgc_s,
 								'4_v': self.ac_v, 
 								'4_s': self.ac_s,	}
+		#config
+		self.conf = ConfigParser.ConfigParser()
+		self.conf.read("test.conf")
+		self.DownloadAddress = self.conf.get("download address", "address")
 
 	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
 		return self.render.SystemReportDay()
 
 	def POST(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+
 		i = web.input(Checkbox=[])
 		Y, M, D = i.Y, i.M, i.D
 		cks = i.get('Checkbox','')
@@ -426,6 +583,7 @@ class SystemReportDay:
 		for ck in cks:
 			str_cks +=", " + self.dictionarSQL[ck] + "_v, " + self.dictionarSQL[ck] + "_s" 
 		sql = "SELECT year, month, day, time_hour" + str_cks + " FROM monitoring_value"
+		sql += " WHERE year = '" + Y + "' AND month = '" + M + "' AND day = '" + D + "'"
 		print(sql)
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
@@ -464,9 +622,11 @@ class SystemReportDay:
 				sheet1.write(c,l  , self.dictionarClass[str(ck)+"_v"][c-1])
 				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
    				l += 2
-		#保存該excel文件,有同名文件時直接覆蓋
-		workbook.save('C:\Users\ASUS\Desktop\sss.xls')
+		#保存該excel文件
+		A = str(self.DownloadAddress) + "\\日報表" + Y + "年" + M + "月" + D + "日.xls"
+		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
+		return self.render.SystemReportDay()
 class SystemReportWeek:
 	def __init__(self):
 		#Value definition
@@ -483,19 +643,105 @@ class SystemReportWeek:
 		self.temp_v = []
 		self.temp_s = []
 		#Databse definition
-		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
 		self.cursor = self.db.cursor()
 		#Template definition
 		self.render = web.template.render("view")
+		#Dictionary
+		self.dictionarSQL = {	'1':'temp', 
+								'2':'humidity',
+								'3':'cgc',
+								'4':'ac',
+								'5':'acurrent', 
+								'6':'current'		}
+		self.dictionarName = {	'1_v': "溫度", 
+								'1_s': "狀態",
+								'2_v': "濕度", 
+								'2_s': "狀態",
+								'3_v': "可燃氣濃度", 
+								'3_s': "狀態",
+								'4_v': "空氣清晰度", 
+								'4_s': "狀態",		}
+		self.dictionarClass = {	'1_v': self.temp_v, 
+								'1_s': self.temp_s,
+								'2_v': self.humidity_v, 
+								'2_s': self.humidity_s,
+								'3_v': self.cgc_v, 
+								'3_s': self.cgc_s,
+								'4_v': self.ac_v, 
+								'4_s': self.ac_s,	}
+		#config
+		self.conf = ConfigParser.ConfigParser()
+		self.conf.read("test.conf")
+		self.DownloadAddress = self.conf.get("download address", "address")
+
 	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
 		return self.render.SystemReportWeek()
 
 	def POST(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+
 		i = web.input(Checkbox=[])
 		Y, M, D = i.Y, i.M, i.D
 		cks = i.get('Checkbox','')
-		print(cks)
-		print(Y+">>"+M+">>"+D)
+		str_cks = ""
+		for ck in cks:
+			str_cks +=", " + self.dictionarSQL[ck] + "_v, " + self.dictionarSQL[ck] + "_s" 
+		sql = "SELECT year, month, day, time_hour" + str_cks + " FROM monitoring_value"
+		sql	+= " WHERE year = '" + Y + "' AND month = '" + M +"' AND day IN ("
+		sql	+= "'" + str(int(D)) + "', '"+ str(int(D)+1) + "', '"+ str(int(D)+2) + "', '"+ str(int(D)+3) + "', '"+ str(int(D)+4) + "', '"+ str(int(D)+5) + "', '"+ str(int(D)+6) + "')"
+		print(sql)
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			num = 4
+   			for ck in cks:
+   				self.dictionarClass[str(ck)+"_v"].append(row[num])
+   				self.dictionarClass[str(ck)+"_s"].append(row[num+1])
+   				num +=2
+   		self.db.close()
+		
+		#創建workbook和sheet對象
+		workbook = xlwt.Workbook() #註意Workbook的開頭W要大寫
+		sheet1 = workbook.add_sheet('sheet1',cell_overwrite_ok=True)
+		#向sheet頁中寫入數據
+		sheet1.write(0,0, "年".decode('utf-8'))
+		sheet1.write(0,1, "月".decode('utf-8'))
+		sheet1.write(0,2, "日".decode('utf-8'))
+		sheet1.write(0,3, "時間(時)".decode('utf-8'))
+   		num = 4
+   		for ck in cks:
+   			sheet1.write(0, num	 , self.dictionarName[str(ck)+"_v"].decode('utf-8'))
+			sheet1.write(0, num+1, self.dictionarName[str(ck)+"_s"].decode('utf-8'))
+   			num +=2
+		for c in range(1,len(self.year)):
+			sheet1.write(c,0, self.year[c-1])
+			sheet1.write(c,1, self.month[c-1])
+			sheet1.write(c,2, self.day[c-1])
+			sheet1.write(c,3, self.time_hour[c-1])
+			l = 4
+			for ck in cks:
+				sheet1.write(c,l  , self.dictionarClass[str(ck)+"_v"][c-1])
+				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
+   				l += 2
+		#保存該excel文件
+		A = str(self.DownloadAddress) + "\\周報表" + Y + "年" + M + "月" + D + "至" + str(int(D)+6) + "日.xls"
+		workbook.save(A)
+		print("創建excel文件完成!".decode('utf-8'))
 		return self.render.SystemReportWeek()
 class SystemReportMonth:
 	def __init__(self):
@@ -513,22 +759,107 @@ class SystemReportMonth:
 		self.temp_v = []
 		self.temp_s = []
 		#Databse definition
-		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
 		self.cursor = self.db.cursor()
 		#Template definition
 		self.render = web.template.render("view")
+		#Dictionary
+		self.dictionarSQL = {	'1':'temp', 
+								'2':'humidity',
+								'3':'cgc',
+								'4':'ac',
+								'5':'acurrent', 
+								'6':'current'		}
+		self.dictionarName = {	'1_v': "溫度", 
+								'1_s': "狀態",
+								'2_v': "濕度", 
+								'2_s': "狀態",
+								'3_v': "可燃氣濃度", 
+								'3_s': "狀態",
+								'4_v': "空氣清晰度", 
+								'4_s': "狀態",		}
+		self.dictionarClass = {	'1_v': self.temp_v, 
+								'1_s': self.temp_s,
+								'2_v': self.humidity_v, 
+								'2_s': self.humidity_s,
+								'3_v': self.cgc_v, 
+								'3_s': self.cgc_s,
+								'4_v': self.ac_v, 
+								'4_s': self.ac_s,	}
+		#config
+		self.conf = ConfigParser.ConfigParser()
+		self.conf.read("test.conf")
+		self.DownloadAddress = self.conf.get("download address", "address")
+
 	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
 		return self.render.SystemReportMonth()
 
 	def POST(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+
 		i = web.input(Checkbox=[])
 		Y, M = i.Y, i.M
 		cks = i.get('Checkbox','')
-		print(cks)
-		print(Y+">>"+M)
+		str_cks = ""
+		for ck in cks:
+			str_cks +=", " + self.dictionarSQL[ck] + "_v, " + self.dictionarSQL[ck] + "_s" 
+		sql = "SELECT year, month, day, time_hour" + str_cks + " FROM monitoring_value"
+		sql += " WHERE year = '" + Y + "' AND month = '" + M + "'"
+		print(sql)
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			num = 4
+   			for ck in cks:
+   				self.dictionarClass[str(ck)+"_v"].append(row[num])
+   				self.dictionarClass[str(ck)+"_s"].append(row[num+1])
+   				num +=2
+   		self.db.close()
+		
+		#創建workbook和sheet對象
+		workbook = xlwt.Workbook() #註意Workbook的開頭W要大寫
+		sheet1 = workbook.add_sheet('sheet1',cell_overwrite_ok=True)
+		#向sheet頁中寫入數據
+		sheet1.write(0,0, "年".decode('utf-8'))
+		sheet1.write(0,1, "月".decode('utf-8'))
+		sheet1.write(0,2, "日".decode('utf-8'))
+		sheet1.write(0,3, "時間(時)".decode('utf-8'))
+   		num = 4
+   		for ck in cks:
+   			sheet1.write(0, num	 , self.dictionarName[str(ck)+"_v"].decode('utf-8'))
+			sheet1.write(0, num+1, self.dictionarName[str(ck)+"_s"].decode('utf-8'))
+   			num +=2
+		for c in range(1,len(self.year)):
+			sheet1.write(c,0, self.year[c-1])
+			sheet1.write(c,1, self.month[c-1])
+			sheet1.write(c,2, self.day[c-1])
+			sheet1.write(c,3, self.time_hour[c-1])
+			l = 4
+			for ck in cks:
+				sheet1.write(c,l  , self.dictionarClass[str(ck)+"_v"][c-1])
+				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
+   				l += 2
+		#保存該excel文件
+		A = str(self.DownloadAddress) + "\\月報表" + Y + "年" + M + "月.xls"
+		workbook.save(A)
+		print("創建excel文件完成!".decode('utf-8'))
 		return self.render.SystemReportMonth()
 
-#---# 3__Event__
+#---# 3__Set__
 class SystemSetUp():
 	def __init__(self):
 		self.conf = ConfigParser.ConfigParser()
@@ -537,8 +868,10 @@ class SystemSetUp():
 
 	def GET(self):
 		render = web.template.render("view")
-		return render.SystemSetUp(self.DownloadAddress)
+		if session.logged_in == False:
+			raise web.seeother('/')
 
+		return render.SystemSetUp(self.DownloadAddress)
 class SystemSetUpdata():
 	def __init__(self):
 		self.conf = ConfigParser.ConfigParser()
@@ -547,9 +880,18 @@ class SystemSetUpdata():
 		self.render = web.template.render("view")
 	
 	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+
 		return self.render.SystemSetUpdate(self.DownloadAddress)
 	
 	def POST(self):
+		self.i = web.input()
+		self.DownloadAddress = self.i.download_address
+		self.conf.set("download address", "address", self.DownloadAddress)
+		with open("test.conf","w+") as f:
+			self.conf.write(f)	
 		return self.render.SystemSetUp(self.DownloadAddress)
+
 if __name__ == '__main__':
 	app.run()
