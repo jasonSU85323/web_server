@@ -1,0 +1,38 @@
+/*Environmental monitoring Current value*/
+.right_t{
+    height: 200px;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    display: flex;
+}
+.ele{
+    height: 200px;
+    width: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 25%;
+    background-color: #5599FF;
+}
+.ele_t{
+    height: 50px;
+    width: 100%;
+    padding-top: 10px;
+    text-align:center;
+}
+.ele_b{
+    height: 50px;
+    width: 100%;
+    text-align:center;
+}
+.ele_t_font{
+    font-family:微軟正黑體;
+    font-size: 20px;
+}
+.ele_b_font{
+    font-family:微軟正黑體;
+    font-size: 80px;
+    color: #0044BB;
+}
+/*--------------------------------------*/

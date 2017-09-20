@@ -1,3 +1,4 @@
+$def with(DA)
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,11 +10,60 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/ui">
-    <link rel="stylesheet" type="text/css" href="/sm_admq">
+    <link rel="stylesheet" type="text/css" href="/su">
 	<title>居家物聯網監控系統</title>
 
-    <!-- // 引用 jQuery.js 和 jQuery-TablePage.js -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script language="Javascript">   
+
+function CheckForm(){
+    /*if(confirm("確認要送出本表單嗎？")==true)   
+        return true;
+    else  
+        return false;*/
+    var A = document.getElementById("A").value
+    var B = document.getElementById("B").value
+    var C = document.getElementById("C").value
+    var D = document.getElementById("D").value
+    if(A == "" || B == "" || C == "" || D == ""){
+        alert("不得為空值");
+        return false;
+    }
+    else{
+        if(confirm("確認要送出本表單嗎？")==true)   
+            return true;
+        else  
+            return false;
+    }
+}
+function Function_A(){
+    var p = document.getElementById("A").value
+    if(p == ""){
+        alert("不得為空值");
+        document.getElementById("A").value = p;
+    }
+}
+function Function_B(){
+    var p = document.getElementById("B").value
+    if(p == ""){
+        alert("不得為空值");
+        document.getElementById("B").value = p;
+    }
+}
+function Function_C(){
+    var p = document.getElementById("C").value
+    if(p == ""){
+        alert("不得為空值");
+        document.getElementById("C").value = p;
+    }
+}
+function Function_D(){
+    var p = document.getElementById("D").value
+    if(p == ""){
+        alert("不得為空值");
+        document.getElementById("D").value = p;
+    }
+}
+</script>  
 
 </head>
 <body class="output container">
@@ -61,48 +111,42 @@
                 <a href="/Member/Quire" class="list-group-item">成員</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
                 <a href="/SetUp" class="list-group-item">設定</a>
+                
             </div>
         </div>
     </div>
 
-
     <div class="right">
-        <!--新增-->
-        <div class="right_MemberAdd">
-            <div class="right_MemberAdd_t">
-                <div class="text_1">新增</div>
+        <!--設定值-->
+        <div class="setR">
+            <div class="setR_t">
+                <div class="text_1">設定值</div>
             </div>
-            <div class="right_MemberAdd_t_b">
-                <form class="form-horizontal right_MemberAdd_form">
+            <div class="setR_b">
+                <form action="/SetUpdata" method="POST" class="form-horizontal setR_form" onSubmit="return CheckForm();">
+                    <!--下載地點-->
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">設定帳號</label>
+                        <label class="col-sm-2 control-label">下載地點：</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" placeholder="至少6字元">
-                        </div>
+                            <input class="form-control" type="text" onblur="Function_A()" id="A" value="$DA"></div>
                     </div>
+                    <!--功能-->
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">設定密碼</label>
+                        <label class="col-sm-2 control-label">功能：</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" placeholder="至少6字元">
-                        </div>
+                            <input class="form-control" type="text" onblur="Function_B()" id="B"></div>
                     </div>
+                    <!--功能-->
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">密碼確認</label>
+                        <label class="col-sm-2 control-label">功能：</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" placeholder="至少6字元">
-                        </div>
+                            <input class="form-control" type="text" onblur="Function_C()" id="C"></div>
                     </div>
+                    <!--功能-->
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">設定手機</label>
+                        <label class="col-sm-2 control-label">功能：</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">設定Email</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control">
-                        </div>
+                            <input class="form-control" type="text" onblur="Function_D()" id="D"></div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
@@ -111,6 +155,7 @@
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
     

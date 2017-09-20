@@ -6,6 +6,7 @@ import time
 import rsa
 import MySQLdb
 import xlwt
+import ConfigParser
 
 import sys
 reload(sys)
@@ -14,10 +15,21 @@ sys.setdefaultencoding('utf-8')
 urls = (
 	'/ui', 'ui',
 	'/jquery-tablepage', 'jquerytablepage',
+	'/singin','singin',
+	'/ecs','ecs',			#---1---
+	'/epvt','epvt',
+	'/epvf','epvf',
+	'/sdl','sdl',			#---2---
+	'/sm','sm',
+	'/ser','ser',
+	'/sm_admq','sm_admq',	#---3---
+	'/sr_dmw','sr_dmw',
+	'/su','su',
 	'/', 'Login',													# Login page
 	'/login', 'Login',												# Login to judge
-	'/logout', 'Logout',											# Sign out
-	'/CurrentState'		,'EnvironmentCurrentState',
+	'/logout', 'Logout',
+	'/QQQ'				,'QQQ',										# Sign out
+	'/CurrentState'		,'EnvironmentCurrentState',					
 	'/PastValueTable'	,'EnvironmentPastValueTable',
 	'/PastValueFigure'	,'EnvironmentPastValueFigure',
 	'/DoorLock'			,'SafetyDoorLock',
@@ -28,10 +40,11 @@ urls = (
 	'/Member/Add'		,'SystemMemberAdd',
 	'/Member/Modify'	,'SystemMemberModify',
 	'/Member/Delete'	,'SystemMemberDeiete',
-	'/Event'			,'SystemEvent',
 	'/SystemReportDay'	,'SystemReportDay',
 	'/SystemReportWeek'	,'SystemReportWeek',
-	'/SystemReportMonth','SystemReportMonth'
+	'/SystemReportMonth','SystemReportMonth',
+	'/SetUp'			,'SystemSetUp',
+	'/SetUpdata'		,'SystemSetUpdata'
 
 )
 
@@ -42,6 +55,7 @@ session = web.session.Session(app, web.session.DiskStore('sessions'))
 #################################################
 							#		CSS,JS		#
 							#####################
+	#---ALL---
 class ui:
 	def GET(self):
 		render = web.template.render("css_js")
@@ -50,6 +64,50 @@ class jquerytablepage:
 	def GET(self):
 		render = web.template.render("css_js")
 		return render.jqueryTablepage()
+	#---S---
+class singin:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.singin()
+	#---1---
+class ecs:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.ecs()
+class epvt:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.epvt()
+class epvf:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.epvf()
+	#---2---
+class sdl:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.sdl()
+class sm:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.sm()		
+class ser:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.ser()
+	#---3---
+class sm_admq:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.sm_admq()
+class sr_dmw:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.sr_dmw()
+class su:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.su()
 
 #########################################################
 							#		Log in, log out		#(ERROR!!!)
@@ -103,6 +161,26 @@ class Logout:
 #####################################################################
 							#		Environmental monitoring		#		   
 							#########################################
+class QQQ:
+	
+	def __init__(self):
+		self.T = 0
+		self.H = 0
+		self.G = 0
+		self.A = 0
+		self.C = 0
+		self.CD = 0
+		self.render = web.template.render("view")
+	def GET(self):
+		
+		
+		if session.get('logged_in', False):
+			return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
+        
+		raise web.seeother('/')
+	def POST(self):
+		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
+
 class EnvironmentCurrentState:
 	
 	def __init__(self):
@@ -285,12 +363,7 @@ class SystemMemberDeiete:
 		render = web.template.render("view")
 		return render.SystemMemberDeiete()
 
-#---# 2__Event__
-class SystemEvent:
-	def GET(self):
-		render = web.template.render("view")
-		return render.SystemEvent()
-	# 3__Report__
+#---# 2__Report__
 class SystemReportDay:
 	def __init__(self):
 		#Value definition
@@ -307,7 +380,14 @@ class SystemReportDay:
 		self.temp_v = []
 		self.temp_s = []
 		#Databse definition
-		self.db = MySQLdb.connect("127.0.0.1","root","root","topic",charset="utf8")
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
 		self.cursor = self.db.cursor()
 		#Template definition
 		self.render = web.template.render("view")
@@ -317,8 +397,7 @@ class SystemReportDay:
 								'3':'cgc',
 								'4':'ac',
 								'5':'acurrent', 
-								'6':'current'
-						 	}
+								'6':'current'		}
 		self.dictionarName = {	'1_v': "溫度", 
 								'1_s': "狀態",
 								'2_v': "濕度", 
@@ -326,8 +405,7 @@ class SystemReportDay:
 								'3_v': "可燃氣濃度", 
 								'3_s': "狀態",
 								'4_v': "空氣清晰度", 
-								'4_s': "狀態",
-						 	}
+								'4_s': "狀態",		}
 		self.dictionarClass = {	'1_v': self.temp_v, 
 								'1_s': self.temp_s,
 								'2_v': self.humidity_v, 
@@ -335,8 +413,7 @@ class SystemReportDay:
 								'3_v': self.cgc_v, 
 								'3_s': self.cgc_s,
 								'4_v': self.ac_v, 
-								'4_s': self.ac_s,
-						 	}
+								'4_s': self.ac_s,	}
 
 	def GET(self):
 		return self.render.SystemReportDay()
@@ -390,7 +467,6 @@ class SystemReportDay:
 		#保存該excel文件,有同名文件時直接覆蓋
 		workbook.save('C:\Users\ASUS\Desktop\sss.xls')
 		print("創建excel文件完成!".decode('utf-8'))
-
 class SystemReportWeek:
 	def __init__(self):
 		#Value definition
@@ -452,5 +528,28 @@ class SystemReportMonth:
 		print(Y+">>"+M)
 		return self.render.SystemReportMonth()
 
+#---# 3__Event__
+class SystemSetUp():
+	def __init__(self):
+		self.conf = ConfigParser.ConfigParser()
+		self.conf.read("test.conf")
+		self.DownloadAddress = self.conf.get("download address", "address")
+
+	def GET(self):
+		render = web.template.render("view")
+		return render.SystemSetUp(self.DownloadAddress)
+
+class SystemSetUpdata():
+	def __init__(self):
+		self.conf = ConfigParser.ConfigParser()
+		self.conf.read("test.conf")
+		self.DownloadAddress = self.conf.get("download address", "address")
+		self.render = web.template.render("view")
+	
+	def GET(self):
+		return self.render.SystemSetUpdate(self.DownloadAddress)
+	
+	def POST(self):
+		return self.render.SystemSetUp(self.DownloadAddress)
 if __name__ == '__main__':
 	app.run()

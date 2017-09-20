@@ -1,0 +1,29 @@
+/*Environmental monitoring tble*/
+.E_table{
+    height: 460px;
+    width: 99%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+}
+.E_table_t{
+    height: 40px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #99BBFF;
+    
+}
+.E_table_t_L{
+    height: 40px;
+    width: 500px;
+    float:left;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+.E_table_t_R{
+    height: 40px;
+    width: 200px;
+    float:right;
+    padding-top: 5px;
+}
+/*-----------------------------*/

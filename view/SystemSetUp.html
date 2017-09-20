@@ -1,3 +1,4 @@
+$def with(DA)
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/ui">
+    <link rel="stylesheet" type="text/css" href="/su">
 	<title>居家物聯網監控系統</title>
 
 </head>
@@ -55,41 +57,53 @@
             <div class="list-group">
                 <a class="list-group-item active">系統設定</a>
                 <a href="/Member/Quire" class="list-group-item">成員</a>
-                <a href="/Event" class="list-group-item">事件</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
+                <a href="/SetUp" class="list-group-item">設定</a>
+                
             </div>
         </div>
     </div>
 
-
     <div class="right">
-        <div class="right_t">
-            <div class="ele">
-                <div class="ele_t">溫度</div>
-                <div class="ele_b">28</div>
+        <!--設定值-->
+        <div class="setR">
+            <div class="setR_t">
+                <div class="text_1">設定值</div>
             </div>
-            <div class="ele">
-                <div class="ele_t">濕度</div>
-                <div class="ele_b">60</div>
+            <div class="setR_b">
+                <div class="form-horizontal setR_form">
+                    <!--下載地點-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">下載地點：</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="formGroupInputSmall" value="$DA" readonly></div>
+                    </div>
+                    <!--功能-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">功能：</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="formGroupInputSmall" readonly></div>
+                    </div>
+                    <!--功能-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">功能：</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="formGroupInputSmall" readonly></div>
+                    </div>
+                    <!--功能-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">功能：</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="formGroupInputSmall" readonly></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <a class="btn btn-default" href="/SetUpdata" role="button">更改</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="ele">
-                <div class="ele_t">可燃氣濃度</div>
-                <div class="ele_b">100</div>
-            </div>
-            <div class="ele">
-                <div class="ele_t">空氣清晰度</div>
-                <div class="ele_b">200</div>
-            </div>
-        </div>
-        <div class="right_t">
-            <div class="ele">
-                <div class="ele_t">電流</div>
-                <div class="ele_b">0.6</div>
-            </div>
-            <div class="ele">
-                <div class="ele_t">累計度數</div>
-                <div class="ele_b">32.1</div>
-            </div>
+
         </div>
     </div>
     

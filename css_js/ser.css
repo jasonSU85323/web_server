@@ -1,0 +1,39 @@
+/*Safety Event Record*/
+.text_title{ /*好像沒這個*/
+    font-family:微軟正黑體;
+    font-size: 38px;
+}
+.text_1{
+    height: 40px;
+    width: 200px;
+    float:left; 
+    font-family:微軟正黑體;
+    font-size: 30px;
+    color: #5555FF;
+}
+.right_Event{
+    height: 540px;
+    width: 99%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+}
+.right_Event_t{
+    height: 40px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #99BBFF;
+    
+}
+.right_Event_t_L{
+    height: 40px;
+    width: 300px;
+    float:right;
+    padding-top: 5px;
+}
+.right_Event_t_R{
+    height: 40px;
+    width: 200px;
+    float:right;
+    padding-top: 5px;
+}

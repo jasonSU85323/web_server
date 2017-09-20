@@ -12,6 +12,7 @@ $def with(T,H,G,A,C,CD)
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/ui">
+    <link rel="stylesheet" type="text/css" href="/ecs">
 	<title>居家物聯網監控系統</title>
 
 
@@ -59,8 +60,8 @@ $def with(T,H,G,A,C,CD)
             <div class="list-group">
                 <a class="list-group-item active">系統設定</a>
                 <a href="/Member/Quire" class="list-group-item">成員</a>
-                <a href="/Event" class="list-group-item">事件</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
+                <a href="/SetUp" class="list-group-item">設定</a>
             </div>
         </div>
     </div>
@@ -70,44 +71,58 @@ $def with(T,H,G,A,C,CD)
         <!--第一排-->
         <div class="right_t">
             <div class="ele">
-                <div class="ele_t">溫度</div>
-                <div class="ele_b">$T</div>
+                <div class="ele_t ele_t_font">溫度</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">$T</p></div>
             </div>
             <div class="ele">
-                <div class="ele_t">濕度</div>
-                <div class="ele_b">$H</div>
+                <div class="ele_t ele_t_font">濕度</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">$H</p></div>
             </div>
             <div class="ele">
-                <div class="ele_t">可燃氣濃度</div>
-                <div class="ele_b">$G</div>
+                <div class="ele_t ele_t_font">可燃氣濃度</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">$G</p></div>
             </div>
             <div class="ele">
-                <div class="ele_t">空氣清晰度</div>
-                <div class="ele_b">$A</div>
+                <div class="ele_t ele_t_font">空氣清晰度</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">$A</p></div>
             </div>
         </div>
         <!--第二排-->
         <div class="right_t">
             <div class="ele">
-                <div class="ele_t">電流</div>
-                <div class="ele_b">$C</div>
+                <div class="ele_t ele_t_font">電流</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">$C</p></div>
             </div>
             <div class="ele">
-                <div class="ele_t">累計度數</div>
-                <div class="ele_b">$CD</div>
+                <div class="ele_t ele_t_font">累計度數</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">$CD</p></div>
             </div>
         </div>
         <!--第三排-->
         <div class="right_t">
             <div class="ele">
-                <div class="ele_t">插座狀態</div>
-                <div class="ele_b">關</div>
+                <div class="ele_t ele_t_font">插座狀態</div>
+                <div class="ele_b">
+                    <p class="ele_b_font" id="p1">關</p></div>
             </div>
         </div>
     </div>
     
 
 </div>
-
+<form name="QQQ" action="/QQQ" method="post"> </form>
+<script>
+window.setTimeout(show,5000); 
+function show() {
+    document.QQQ.submit();  
+    //document.getElementById("p1").innerHTML="New text!";
+}
+</script>
 </body>
 </html>
