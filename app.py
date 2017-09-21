@@ -365,11 +365,61 @@ class SafetyMonitor:
 		return self.render.SafetyMonitor()
 class SafetyEventRecord:
 	def __init__(self):
+		#Value definition
+		self.year = []		#year
+		self.month = []		#month
+		self.day = []		#day
+		self.time_hour = []	#time_hour
+		self.event = []		#event_description
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
 		self.render = web.template.render("view")
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.SafetyEventRecord()
+
+		sql = "SELECT year, month, day, time_hour, event_description FROM event"
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.event.append(row[4])
+   		self.db.close()
+
+		return self.render.SafetyEventRecord(self.year, self.month, self.day, self.time_hour, self.event)
+	def POST(self):
+		self.i = web.input()
+
+		sql = "SELECT year, month, day, time_hour, event_description FROM event WHERE year = \'" +self.i.Y+"\'"
+		if self.i.M not in "all":
+			sql += " AND month = \'" + self.i.M + "\'"
+		if self.i.D not in "all":
+			sql += " AND day = \'"   + self.i.D + "\'"
+		print(sql)
+		print(self.i.D)
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.year.append(row[0])
+   			self.month.append(row[1])
+   			self.day.append(row[2])
+   			self.time_hour.append(row[3])
+   			self.event.append(row[4])
+   		self.db.close()
+
+		return self.render.SafetyEventRecord(self.year, self.month, self.day, self.time_hour, self.event)
 		
 #########################################################
 							#		System program		#
@@ -467,7 +517,15 @@ class SystemMemberModify:
 		render = web.template.render("view")
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return render.SystemMemberModify()
+		
+		sql = "SELECT account FROM member_information"
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.number.append(row[0])
+   		self.db.close()
+
+		return render.SystemMemberModify(self.number)
 	def POST(self):
 		self.i = web.input()
 		sql = "UPDATE member_information SET "
@@ -500,7 +558,15 @@ class SystemMemberDeiete:
 		render = web.template.render("view")
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return render.SystemMemberDeiete()
+
+		sql = "SELECT account FROM member_information"
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.number.append(row[0])
+   		self.db.close()
+
+		return render.SystemMemberDeiete(self.number)
 	def POST(self):
 		self.i = web.input()
 		sql = "DELETE FROM member_information "

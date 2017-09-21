@@ -1,3 +1,4 @@
+$def with(account)
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +15,58 @@
 
     <!-- // 引用 jQuery.js 和 jQuery-TablePage.js -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script language="Javascript">   
 
+function CheckForm(){
+    /*if(confirm("確認要送出本表單嗎？")==true)   
+        return true;
+    else  
+        return false;*/
+    var A = document.getElementById("A").value
+    if(A == ""){
+        alert("不得為空值");
+        return false;
+    }
+    else{
+        if(confirm("確認要送出本表單嗎？")==true)   
+            return true;
+        else  
+            return false;
+    }
+}
+function Function_A(){
+    var i = document.getElementById("i").value
+    var a = document.getElementById("A").value
+    if(i == "passwore"){
+        if(a == ""){
+            alert("密碼欄位不得為空值");
+            document.getElementById("A").value = a;
+        }else if(a.length <6){
+            alert("密碼長度需大於6");
+            document.getElementById("A").value = "";
+        }
+    }else if(i == "phone"){
+        if(a == ""){
+            alert("電話欄位不得為空值");
+            document.getElementById("A").value = a;
+        } else if(a.length != 10) {
+            alert("需為09********");
+            document.getElementById("A").value = "";
+        } else if(a.substr(0,2) != "09") {
+            alert("需為09********");
+            document.getElementById("A").value = "";
+        }    
+    }else if(i == "email"){
+        if(a == ""){
+            alert("email欄位不得為空值");
+            document.getElementById("A").value = a;
+        } else if(a.search("@") == -1){
+            alert("需符合格式，「@」");
+            document.getElementById("A").value = "";
+        }    
+    }
+}
+</script>
 </head>
 <body class="output container">
 
@@ -74,17 +126,21 @@
                 <div class="text_1">修改</div>
             </div>
             <div class="right_MemberMod_t_b">
-                <form action="/Member/Modify" method="POST" class="form-horizontal right_MemberMod_form">
+                <form action="/Member/Modify" method="POST" class="form-horizontal right_MemberMod_form" onSubmit="return CheckForm();">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇帳號</label>
                         <div class="col-sm-10">
-                            <input name="account" type="text" class="form-control">
+                            <select name="account" class="form-control">
+                                $for i in range(0,len(account)):
+                                    <option value="$account[i]">$account[i]</option>
+
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">設定項目</label>
                         <div class="col-sm-10">
-                            <select name="setname" class="form-control">
+                            <select name="setname" id="i" class="form-control">
                                 <option value="passwore">密碼</option>
                                 <option value="phone">電話</option>
                                 <option value="email">電子郵件</option>
@@ -94,13 +150,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">修改內容</label>
                         <div class="col-sm-10">
-                            <input name="settxt" type="text" class="form-control" placeholder="更新內容...">
+                            <input name="settxt" type="text" class="form-control" placeholder="更新內容..." onblur="Function_A()" id="A">
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-default">確認</button>
+                            <a class="btn btn-default" href="/Member/Quire" role="button">返回</a>
                         </div>
                     </div>
                 </form>
