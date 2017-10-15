@@ -10,10 +10,16 @@ $def with(keye,keyn)
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!--RSA-->
+    <!--
     <script src="http://www.ohdave.com/rsa/BigInt.js"></script>
     <script src="http://www.ohdave.com/rsa/Barrett.js"></script>
     <script src="http://www.ohdave.com/rsa/RSA.js"></script>
     <script src="http://www.ohdave.com/rsa/RSA_Stripped.js"></script>
+    -->
+    <script type="text/javascript" src="/BigInt"></script>
+    <script type="text/javascript" src="/Barrett"></script>
+    <script type="text/javascript" src="/RSA"></script>
+    <script type="text/javascript" src="/RSA_Stripped"></script>
 
     <!--<link rel="stylesheet" type="text/css" href="http://140.137.41.137:8089/w10507/css_js/ui.css">-->
     <link rel="stylesheet" type="text/css" href="/ui">
@@ -72,13 +78,13 @@ $$(function(){
         var publickeye = document.getElementById("pubkeye").value;
         var publickeyn = document.getElementById("pubkeyn").value;
         var loginform = document.getElementById("loginform");
-        pube = (publickeye.substring(2));
-        pubn = (publickeyn.slice(2,-1));
+        pube = publickeye;
+        pubn = publickeyn;
         var password = document.getElementById("password").value;
         setMaxDigits(130);
         var key = new RSAKeyPair(pube,"",pubn);
         var en_password = encryptedString(key, password);
-        alert(pube + "\n" + pubn+ "\n" + password+ "\n" + key+ "\n" + en_password);
+        alert("pube:" + pube + "\n" + "pubn:" + pubn + "\n" + "password:" + password + "\n" + "key:" + key + "\n" + "en_password:" + en_password);
         document.getElementById("password").value = en_password;
         loginform.submit();
     })

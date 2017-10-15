@@ -7,50 +7,60 @@ import rsa
 import MySQLdb
 import xlwt
 import ConfigParser
+import socket
+#import js2py
+
+from web.wsgiserver import CherryPyWSGIServer
+ 
+CherryPyWSGIServer.ssl_certificate = "cacert.pem"
+CherryPyWSGIServer.ssl_private_key = "prvtkey.pem"
 
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 urls = (
-	'/ui', 'ui',
-	'/jquery-tablepage', 'jquerytablepage',
-	'/singin','singin',
-	'/ecs','ecs',			#---1---
-	'/epvt','epvt',
-	'/epvf','epvf',
-	'/sdl','sdl',			#---2---
-	'/sm','sm',
-	'/ser','ser',
-	'/sm_admq','sm_admq',	#---3---
-	'/sr_dmw','sr_dmw',
-	'/su','su',
-	'/', 'Login',													# Login page
-	'/login', 'Login',												# Login to judge
-	'/logout', 'Logout',
-	'/QQQ'				,'QQQ',										# Sign out
-	'/CurrentState'		,'EnvironmentCurrentState',					
-	'/PastValueTable'	,'EnvironmentPastValueTable',
-	'/PastValueFigure'	,'EnvironmentPastValueFigure',
-	'/DoorLock'			,'SafetyDoorLock',
-	'/Monitor'			,'SafetyMonitor',
-	'/EventRecord'		,'SafetyEventRecord',
-	'/Member'			,'SystemMember',
-	'/Member/Quire'		,'SystemMemberQuire',
-	'/Member/Add'		,'SystemMemberAdd',
-	'/Member/Modify'	,'SystemMemberModify',
-	'/Member/Delete'	,'SystemMemberDeiete',
-	'/SystemReportDay'	,'SystemReportDay',
-	'/SystemReportWeek'	,'SystemReportWeek',
-	'/SystemReportMonth','SystemReportMonth',
-	'/SetUp'			,'SystemSetUp',
-	'/SetUpdata'		,'SystemSetUpdata'
+	'/ui'	, 'ui',
+	'/jquery-tablepage'	, 'jquerytablepage',
+	'/BigInt'			, 'BigInt',
+	'/Barrett'			, 'Barrett',
+	'/RSA'				, 'RSA',
+	'/RSA_Stripped'		, 'RSA_Stripped',
+	'/singin'	,'singin',
+	'/ecs'		,'ecs',		#---1---
+	'/epvt'		,'epvt',
+	'/epvf'		,'epvf',
+	'/sdl'		,'sdl',		#---2---
+	'/sm'		,'sm',
+	'/ser'		,'ser',
+	'/sm_admq'	,'sm_admq',	#---3---
+	'/sr_dmw'	,'sr_dmw',
+	'/su'		,'su',
+	'/'					, 'Login',								# index --> /login
+	'/login'			, 'Login',								# Sing in
+	'/logout'			, 'Logout',								# Sign out
+	'/QQQ'				,'QQQ',									# Update Current value
+	'/CurrentState'		,'EnvironmentCurrentState_testClass',	# Current value	
+	'/PastValueTable'	,'EnvironmentPastValueTable',			# Past value (table)
+	'/PastValueFigure'	,'EnvironmentPastValueFigure',			# Past value (figure)
+	'/DoorLock'			,'SafetyDoorLock',						# Door lock
+	'/Monitor'			,'SafetyMonitor',						# Camera
+	'/EventRecord'		,'SafetyEventRecord',					# Event record
+	'/Member/Quire'		,'SystemMemberQuire',					# Member Quire
+	'/Member/Add'		,'SystemMemberAdd',						# Member Add
+	'/Member/Modify'	,'SystemMemberModify',					# Member Modify
+	'/Member/Delete'	,'SystemMemberDeiete',					# Member Deiete
+	'/SystemReportDay'	,'SystemReportDay',						# ReportDay
+	'/SystemReportWeek'	,'SystemReportWeek',					# ReportWeek
+	'/SystemReportMonth','SystemReportMonth',					# ReportMonth
+	'/SetUp'			,'SystemSetUp',							# ??
+	'/SetUpdata'		,'SystemSetUpdata'						# ??
 
 )
 
 web.config.debug = False
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'))      
+session = web.session.Session(app, web.session.DiskStore('sessions'), initializer={'privkey':None})      
 
 #################################################
 							#		CSS,JS		#
@@ -64,6 +74,22 @@ class jquerytablepage:
 	def GET(self):
 		render = web.template.render("css_js")
 		return render.jqueryTablepage()
+class BigInt:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.BigInt()
+class Barrett:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.Barrett()
+class RSA:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.RSA()
+class RSA_Stripped:
+	def GET(self):
+		render = web.template.render("css_js")
+		return render.RSA_Stripped()
 	#---S---
 class singin:
 	def GET(self):
@@ -113,38 +139,43 @@ class su:
 							#		Log in, log out		#(ERROR!!!)
 							#############################
 class Login:
-	session['privkey'] = None
+	def __init__(self):
+		self.render = web.template.render("view")
+		self.conf = ConfigParser.ConfigParser()
+		self.conf.read("test.conf")
+		self.pkey = self.conf.get("prive key", "pkey")
+
 	def GET(self):
-		render = web.template.render("view")
 		(pub_key, priv_key) = rsa.newkeys(256)
-		self.pubkey_e = hex(pub_key.e)
-		self.pubkey_n = hex(pub_key.n)
-		session['privkey'] = priv_key
-		print(session['privkey'])
-		print("\n")
-		print("e:"+self.pubkey_e)
-		print("n:"+self.pubkey_n)
+		self.pubkey_e = pub_key.e
+		self.pubkey_n = pub_key.n
+		self.conf.set("prive key", "pkey", priv_key)
+		with open("test.conf","w+") as f:
+			self.conf.write(f)
+
+		print("e:"+str(self.pubkey_e))
+		print("n:"+str(self.pubkey_n))
 		print("--------------------------------------------")
-		return render.SignIn(self.pubkey_e, self.pubkey_n)
+		return self.render.SignIn(self.pubkey_e, self.pubkey_n)
 	
-	def POST_error(self):
-		render = web.template.render("view")
+	def POST_error(self): # error  Decryption failed
 		i = web.input()
 		username = i.user
 		en_password = i.password
-		print("client：")
-		print(username)
-		print(en_password)
+		print("client:" + username + " & " + en_password)
 		print("--------------------------------------------")
-		priv_key = session['privkey']
-		print(priv_key)
-		session['privkey'] = None
+		priv_key = self.pkey
+		#priv_key = session.get('privkey')
+		#print("A"+ str(priv_key))
+		#session['privkey'] = ""
+		#print("B"+ str(priv_key))
+		print("--------------------------------------------")
 		password = rsa.decrypt(en_password.decode('hex'),priv_key)
 		
+
 		print(password)
 	def POST(self):
-#		session.logged_in = True
-#		raise web.seeother('/CurrentState')
+		session.logged_in = True
 		i = web.input()
 		print(i.user)
 		print(i.password)
@@ -168,25 +199,117 @@ class Logout:
 #####################################################################
 							#		Environmental monitoring		#		   
 							#########################################
+#---------------------------------------------------------------------------施工中
 class QQQ:
 	
 	def __init__(self):
-		self.T = 0
-		self.H = 0
-		self.G = 0
-		self.A = 0
-		self.C = 0
-		self.CD = 0
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.arduinoIP 		= conf.get("arduino address", "ip"		)
+		self.arduinoPort 	= conf.get("arduino address", "port"	)
+		
+		"""??????????
+		self.conn().send("Humidity")
+  		self.Humidity.recv(1024)
+  		self.conn().send("TemperC")
+  		self.TemperC.recv(1024)
+  		self.conn().send("TemperF")
+  		self.TemperF.recv(1024)
+  		self.conn().send("sensor")
+  		self.sensor.recv(1024)
+  		self.conn().send("Air")
+  		self.Air.recv(1024)
+  		self.conn().send("Dust")
+  		self.Dust.recv(1024)
+  		self.conn().send("ampere")
+  		self.ampere.recv(1024)
+
+  		self.conn().close()
+		"""
+
+  		self.humidity   = Humidity()
+  		self.TemperC	= TemperC()
+  		self.TemperF 	= TemperF()
+  		self.sensor 	= sensor()
+  		self.Air 		= Air ()
+  		self.Dust 		= Dust()
+  		self.ampere 	= ampere()
+
+
 		self.render = web.template.render("view")
 	def GET(self):
-		
-		
 		if session.get('logged_in', False):
-			return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
-        
+			return self.render.EnvironmentCurrentState(self.humidity, self.TemperC, self.TemperF, self.sensor, self.Air, self.Dust, self.ampere )
+
 		raise web.seeother('/')
-	def POST(self):
-		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
+
+	def conn(self):
+		try:
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error, msg:
+			sys.stderr.write("[ERROR] %s\n" % msg[1])
+			sys.exit(1)
+
+		try:
+			sock.connect((str(self.arduinoIP), self.arduinoPort))
+			print("Arduino connect OK!!")
+		except socket.error, msg:
+			sys.stderr.write("[ERROR] %s\n" % msg[1])
+			exit(1)
+
+		return sock
+
+	def Humidity(self):
+		sock = self.conn()
+		sock.send("Humidity")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+	def TemperC(self):
+		sock = self.conn()
+		sock.send("TemperC")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+	def TemperF(self):
+		sock = self.conn()
+		sock.send("TemperF")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+	def sensor(self):
+		sock = self.conn()
+		sock.send("sensor")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+	def Air(self):
+		sock = self.conn()
+		sock.send("Air")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+	def Dust(self):
+		sock = self.conn()
+		sock.send("Dust")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+	def ampere(self):
+		sock = self.conn()
+		sock.send("ampere")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+#---------------------------------------------------------------------------
 
 class EnvironmentCurrentState:
 	
@@ -197,13 +320,20 @@ class EnvironmentCurrentState:
 		self.A = 250
 		self.C = 0.6
 		self.CD = 32.1
+
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.arduinoIP 		= conf.get("arduino address", "ip"		)
+		self.arduinoPort 	= conf.get("arduino address", "port"	)
+
 		self.render = web.template.render("view")
 	
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
 		
-		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)	
+		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
 class EnvironmentPastValueTable:
 	def __init__(self):
 		#Value definition
@@ -345,6 +475,32 @@ class EnvironmentPastValueFigure:
 		if session.logged_in == False:
 			raise web.seeother('/')
 		return self.render.EnvironmentPastValueFigure()
+
+
+#---------------------------------------------------------------------------測試用
+class EnvironmentCurrentState_testClass:
+	
+	def __init__(self):
+		self.T = 26
+		self.H = 60
+		self.G = 200
+		self.A = 250
+		self.C = 0.6
+		self.CD = 32.1
+
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.arduinoIP 		= conf.get("arduino address", "ip"		)
+		self.arduinoPort 	= conf.get("arduino address", "port"	)
+
+		self.render = web.template.render("view")
+	
+	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+		
+		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
 
 #############################################################
 							#		 Safety monitoring		#
@@ -632,11 +788,15 @@ class SystemReportDay:
 		self.conf = ConfigParser.ConfigParser()
 		self.conf.read("test.conf")
 		self.DownloadAddress = self.conf.get("download address", "address")
+		self.DownloadIP = self.conf.get("download address", "ip")
 
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.SystemReportDay()
+
+		path = ""
+		log = "no"
+		return self.render.SystemReportDay(path, log)
 
 	def POST(self):
 		if session.logged_in == False:
@@ -689,10 +849,12 @@ class SystemReportDay:
 				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
    				l += 2
 		#保存該excel文件
-		A = str(self.DownloadAddress) + "\\日報表" + Y + "年" + M + "月" + D + "日.xls"
+		A = str(self.DownloadAddress) + "/日報表" + Y + "年" + M + "月" + D + "日.xls"
 		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
-		return self.render.SystemReportDay()
+		path = str(self.DownloadIP) +  "/日報表" + Y + "年" + M + "月" + D + "日.xls"
+		log = "yes"
+		return self.render.SystemReportDay(path, log)
 class SystemReportWeek:
 	def __init__(self):
 		#Value definition
@@ -747,11 +909,15 @@ class SystemReportWeek:
 		self.conf = ConfigParser.ConfigParser()
 		self.conf.read("test.conf")
 		self.DownloadAddress = self.conf.get("download address", "address")
+		self.DownloadIP = self.conf.get("download address", "ip")
 
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.SystemReportWeek()
+
+		path = ""
+		log = "no"
+		return self.render.SystemReportWeek(path, log)
 
 	def POST(self):
 		if session.logged_in == False:
@@ -805,10 +971,12 @@ class SystemReportWeek:
 				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
    				l += 2
 		#保存該excel文件
-		A = str(self.DownloadAddress) + "\\周報表" + Y + "年" + M + "月" + D + "至" + str(int(D)+6) + "日.xls"
+		A = str(self.DownloadAddress) + "/周報表" + Y + "年" + M + "月" + D + "至" + str(int(D)+6) + "日.xls"
 		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
-		return self.render.SystemReportWeek()
+		path = str(self.DownloadIP) + "/周報表" + Y + "年" + M + "月" + D + "至" + str(int(D)+6) + "日.xls"
+		log = "yes"
+		return self.render.SystemReportWeek(path, log)
 class SystemReportMonth:
 	def __init__(self):
 		#Value definition
@@ -863,11 +1031,14 @@ class SystemReportMonth:
 		self.conf = ConfigParser.ConfigParser()
 		self.conf.read("test.conf")
 		self.DownloadAddress = self.conf.get("download address", "address")
+		self.DownloadIP = self.conf.get("download address", "ip")
 
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.SystemReportMonth()
+		path = ""
+		log = "no"
+		return self.render.SystemReportMonth(path, log)
 
 	def POST(self):
 		if session.logged_in == False:
@@ -920,10 +1091,12 @@ class SystemReportMonth:
 				sheet1.write(c,l+1, self.dictionarClass[str(ck)+"_s"][c-1])
    				l += 2
 		#保存該excel文件
-		A = str(self.DownloadAddress) + "\\月報表" + Y + "年" + M + "月.xls"
+		A = str(self.DownloadAddress) + "/月報表" + Y + "年" + M + "月.xls"
 		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
-		return self.render.SystemReportMonth()
+		path = str(self.DownloadIP) + "/月報表" + Y + "年" + M + "月.xls"
+		log = "yes"
+		return self.render.SystemReportMonth(path, log)
 
 #---# 3__Set__
 class SystemSetUp():
