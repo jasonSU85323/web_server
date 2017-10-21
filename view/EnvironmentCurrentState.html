@@ -1,9 +1,15 @@
-$def with(T,H,G,A,C,CD)
 <!DOCTYPE html>
 <html>
 <head>
-    
-
+<!--     
+        Humidity   #濕度
+        TemperC    #溫度(攝氏)
+        TemperF    #溫度(華視)
+        sensor     #可燃氣
+        Air        #空氣清晰度
+        Dust       #粉成濃度
+        ampere     #安培量
+ -->
 	<!-- 以下這5行是引用bootstrap及jquery CDN (Content Delivery Network)的標準動作 -->
     <meta charset="utf-8"> <!-- 指定內文的編碼，若要顯示中文，通常用utf-8這個unicode編碼 -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +20,26 @@ $def with(T,H,G,A,C,CD)
     <link rel="stylesheet" type="text/css" href="/ui">
     <link rel="stylesheet" type="text/css" href="/ecs">
 	<title>居家物聯網監控系統</title>
+
+<script>
+    window.setInterval("show()", 1000); 
+    function show() {
+        var baseurl = 'http://192.168.1.150:8006';
+        $$.get(
+            baseurl + '/test',
+            { name: "John", time: "2pm" },
+            function(data){
+                $$('#Humidity').val(data.Humidity);
+                $$('#TemperC').val(data.TemperC);
+                $$('#TemperF').val(data.TemperF);
+                $$('#sensor').val(data.sensor);
+                $$('#Air').val(data.Air);
+                $$('#Dust').val(data.Dust);
+                $$('#ampere').val(data.ampere);
+            }
+        );
+    }
+</script>
 
 
 </head>
@@ -71,41 +97,53 @@ $def with(T,H,G,A,C,CD)
         <!--第一排-->
         <div class="right_t">
             <div class="ele">
-                <div class="ele_t ele_t_font">溫度</div>
-                <div class="ele_b">
-                    <p class="ele_b_font" id="p1">$T</p></div>
-            </div>
-            <div class="ele">
                 <div class="ele_t ele_t_font">濕度</div>
                 <div class="ele_b">
-                    <p class="ele_b_font" id="p1">$H</p></div>
+                    <input type="text" class="ele_b_font ele_b_input" id="Humidity"  readonly="value">
+                </div>
             </div>
             <div class="ele">
-                <div class="ele_t ele_t_font">可燃氣濃度</div>
-                <div class="ele_b">
-                    <p class="ele_b_font" id="p1">$G</p></div>
+                <div class="ele_t ele_t_font">溫度(攝氏)</div>
+                <div class="ele_b">                   
+                    <input type="text" class="ele_b_font ele_b_input" id="TemperC"  readonly="value">
+                </div>
             </div>
             <div class="ele">
-                <div class="ele_t ele_t_font">空氣清晰度</div>
-                <div class="ele_b">
-                    <p class="ele_b_font" id="p1">$A</p></div>
+                <div class="ele_t ele_t_font">溫度(華氏)</div>
+                <div class="ele_b">                  
+                    <input type="text" class="ele_b_font ele_b_input" id="TemperF"  readonly="value">
+                </div>
             </div>
         </div>
         <!--第二排-->
         <div class="right_t">
             <div class="ele">
-                <div class="ele_t ele_t_font">電流</div>
-                <div class="ele_b">
-                    <p class="ele_b_font" id="p1">$C</p></div>
+                <div class="ele_t ele_t_font">可燃氣</div>
+                <div class="ele_b">                  
+                    <input type="text" class="ele_b_font ele_b_input" id="sensor"  readonly="value">
+                </div>
             </div>
             <div class="ele">
-                <div class="ele_t ele_t_font">累計度數</div>
-                <div class="ele_b">
-                    <p class="ele_b_font" id="p1">$CD</p></div>
+                <div class="ele_t ele_t_font">空氣清晰度</div>
+                <div class="ele_b">                  
+                    <input type="text" class="ele_b_font ele_b_input" id="Air"  readonly="value">
+                </div>
+            </div>
+            <div class="ele">
+                <div class="ele_t ele_t_font">粉成濃度</div>
+                <div class="ele_b">                 
+                    <input type="text" class="ele_b_font ele_b_input" id="Dust"  readonly="value">
+                </div>
             </div>
         </div>
         <!--第三排-->
         <div class="right_t">
+            <div class="ele">
+                <div class="ele_t ele_t_font">安培量</div>
+                <div class="ele_b">         
+                    <input type="text" class="ele_b_font ele_b_input" id="ampere"  readonly="value">
+                </div>
+            </div>
             <div class="ele">
                 <div class="ele_t ele_t_font">插座狀態</div>
                 <div class="ele_b">
@@ -116,13 +154,6 @@ $def with(T,H,G,A,C,CD)
     
 
 </div>
-<form name="QQQ" action="/QQQ" method="post"> </form>
-<script>
-window.setTimeout(show,5000); 
-function show() {
-    document.QQQ.submit();  
-    //document.getElementById("p1").innerHTML="New text!";
-}
-</script>
+
 </body>
 </html>

@@ -25,6 +25,7 @@
     height: 50px;
     width: 100%;
     text-align:center;
+    margin:0px auto;
 }
 .ele_t_font{
     font-family:微軟正黑體;
@@ -35,4 +36,11 @@
     font-size: 80px;
     color: #0044BB;
 }
+.ele_b_input{
+    height: 120px; 
+    width: 120px; 
+    background-color: 
+    transparent; border: 0px;    
+}
+
 /*--------------------------------------*/

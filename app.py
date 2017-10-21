@@ -8,12 +8,13 @@ import MySQLdb
 import xlwt
 import ConfigParser
 import socket
+import random
 #import js2py
 
 from web.wsgiserver import CherryPyWSGIServer
  
-CherryPyWSGIServer.ssl_certificate = "cacert.pem"
-CherryPyWSGIServer.ssl_private_key = "prvtkey.pem"
+# CherryPyWSGIServer.ssl_certificate = "cacert.pem"
+# CherryPyWSGIServer.ssl_private_key = "prvtkey.pem"
 
 import sys
 reload(sys)
@@ -39,8 +40,11 @@ urls = (
 	'/'					, 'Login',								# index --> /login
 	'/login'			, 'Login',								# Sing in
 	'/logout'			, 'Logout',								# Sign out
-	'/QQQ'				,'QQQ',									# Update Current value
-	'/CurrentState'		,'EnvironmentCurrentState_testClass',	# Current value	
+
+	'/CurrentState'		,'EnvironmentCurrentState_testClass',	# Current value
+	'/value'			,'value_testClass',									# Update Current value
+	'/test' 			,'test',
+
 	'/PastValueTable'	,'EnvironmentPastValueTable',			# Past value (table)
 	'/PastValueFigure'	,'EnvironmentPastValueFigure',			# Past value (figure)
 	'/DoorLock'			,'SafetyDoorLock',						# Door lock
@@ -146,51 +150,32 @@ class Login:
 		self.pkey = self.conf.get("prive key", "pkey")
 
 	def GET(self):
-		(pub_key, priv_key) = rsa.newkeys(256)
-		self.pubkey_e = pub_key.e
-		self.pubkey_n = pub_key.n
-		self.conf.set("prive key", "pkey", priv_key)
-		with open("test.conf","w+") as f:
-			self.conf.write(f)
+		return self.render.SignIn()
 
-		print("e:"+str(self.pubkey_e))
-		print("n:"+str(self.pubkey_n))
-		print("--------------------------------------------")
-		return self.render.SignIn(self.pubkey_e, self.pubkey_n)
-	
-	def POST_error(self): # error  Decryption failed
-		i = web.input()
-		username = i.user
-		en_password = i.password
-		print("client:" + username + " & " + en_password)
-		print("--------------------------------------------")
-		priv_key = self.pkey
-		#priv_key = session.get('privkey')
-		#print("A"+ str(priv_key))
-		#session['privkey'] = ""
-		#print("B"+ str(priv_key))
-		print("--------------------------------------------")
-		password = rsa.decrypt(en_password.decode('hex'),priv_key)
-		
-
-		print(password)
 	def POST(self):
-		session.logged_in = True
 		i = web.input()
-		print(i.user)
-		print(i.password)
-
-		session.logged_in = True
-		raise web.seeother('/CurrentState')
-
-#		if i.user == '1' and i.password =='1':
-#			session.logged_in = True
-#			raise web.seeother('/CurrentState')
-#		else:
-#			session.logged_in = False
-#			raise web.seeother('/')
+		if i.user == '1' and i.password =='1':
+			session.logged_in = True
+			raise web.seeother('/CurrentState')
+		else:
+			session.logged_in = False
+			raise web.seeother('/')
+	
+	# def POST_error(self): # error  Decryption failed
+	# 	i = web.input()
+	# 	username = i.user
+	# 	en_password = i.password
+	# 	print("client:" + username + " & " + en_password)
+	# 	print("--------------------------------------------")
+	# 	priv_key = self.pkey
+	# 	#priv_key = session.get('privkey')
+	# 	#print("A"+ str(priv_key))
+	# 	#session['privkey'] = ""
+	# 	#print("B"+ str(priv_key))
+	# 	print("--------------------------------------------")
+	# 	password = rsa.decrypt(en_password.decode('hex'),priv_key)
 		
-		
+	# 	print(password)
 class Logout:
     def GET(self):
         session.logged_in = False
@@ -199,8 +184,9 @@ class Logout:
 #####################################################################
 							#		Environmental monitoring		#		   
 							#########################################
-#---------------------------------------------------------------------------施工中
-class QQQ:
+#---------------------------------------------------------------------------
+
+class EnvironmentCurrentState:
 	
 	def __init__(self):
 		#Databse definition
@@ -208,43 +194,48 @@ class QQQ:
 		conf.read("test.conf")
 		self.arduinoIP 		= conf.get("arduino address", "ip"		)
 		self.arduinoPort 	= conf.get("arduino address", "port"	)
-		
-		"""??????????
-		self.conn().send("Humidity")
-  		self.Humidity.recv(1024)
-  		self.conn().send("TemperC")
-  		self.TemperC.recv(1024)
-  		self.conn().send("TemperF")
-  		self.TemperF.recv(1024)
-  		self.conn().send("sensor")
-  		self.sensor.recv(1024)
-  		self.conn().send("Air")
-  		self.Air.recv(1024)
-  		self.conn().send("Dust")
-  		self.Dust.recv(1024)
-  		self.conn().send("ampere")
-  		self.ampere.recv(1024)
 
-  		self.conn().close()
-		"""
-
-  		self.humidity   = Humidity()
-  		self.TemperC	= TemperC()
-  		self.TemperF 	= TemperF()
-  		self.sensor 	= sensor()
-  		self.Air 		= Air ()
-  		self.Dust 		= Dust()
-  		self.ampere 	= ampere()
+  		self.humidity   = self.Humidity()	#濕度
+  		self.TemperC	= self.TemperC()	#溫度(攝氏)
+  		self.TemperF 	= self.TemperF()	#溫度(華視)
+  		self.sensor 	= self.sensor()		#可燃氣
+  		self.Air 		= self.Air ()		#空氣清晰度
+  		self.Dust 		= self.Dust()		#粉成濃度
+  		self.ampere 	= self.ampere()		#安培量
 
 
 		self.render = web.template.render("view")
+	
 	def GET(self):
+		
+		print("----------------------------------------------")
+		print(self.humidity)
+		print(self.TemperC)
+		print(self.TemperF)
+		print(self.sensor)
+		print(self.Air)
+		print(self.Dust)
+		print(self.ampere)
+
 		if session.get('logged_in', False):
 			return self.render.EnvironmentCurrentState(self.humidity, self.TemperC, self.TemperF, self.sensor, self.Air, self.Dust, self.ampere )
-
+        
 		raise web.seeother('/')
-
+	def POST(self):
+		print("----------------------------------------------")
+		print(self.humidity)
+		print(self.TemperC)
+		print(self.TemperF)
+		print(self.sensor)
+		print(self.Air)
+		print(self.Dust)
+		print(self.ampere)
+		print("----------------------------------------------")
+		return self.render.EnvironmentCurrentState(self.humidity, self.TemperC, self.TemperF, self.sensor, self.Air, self.Dust, self.ampere )
+		
 	def conn(self):
+		
+
 		try:
 			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		except socket.error, msg:
@@ -252,88 +243,163 @@ class QQQ:
 			sys.exit(1)
 
 		try:
-			sock.connect((str(self.arduinoIP), self.arduinoPort))
+			sock.connect((str(self.arduinoIP), int(self.arduinoPort)))
 			print("Arduino connect OK!!")
 		except socket.error, msg:
 			sys.stderr.write("[ERROR] %s\n" % msg[1])
 			exit(1)
 
 		return sock
-
 	def Humidity(self):
 		sock = self.conn()
 		sock.send("Humidity")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 	def TemperC(self):
 		sock = self.conn()
 		sock.send("TemperC")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 	def TemperF(self):
 		sock = self.conn()
 		sock.send("TemperF")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 	def sensor(self):
 		sock = self.conn()
 		sock.send("sensor")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 	def Air(self):
 		sock = self.conn()
 		sock.send("Air")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 	def Dust(self):
 		sock = self.conn()
 		sock.send("Dust")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 	def ampere(self):
 		sock = self.conn()
 		sock.send("ampere")
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
-#---------------------------------------------------------------------------
-
-class EnvironmentCurrentState:
+class value:
 	
 	def __init__(self):
-		self.T = 26
-		self.H = 60
-		self.G = 200
-		self.A = 250
-		self.C = 0.6
-		self.CD = 32.1
-
 		#Databse definition
 		conf = ConfigParser.ConfigParser()
 		conf.read("test.conf")
 		self.arduinoIP 		= conf.get("arduino address", "ip"		)
 		self.arduinoPort 	= conf.get("arduino address", "port"	)
+		print("----------------------------------------------")
+
+  		self.humidity   = self.Humidity()	#濕度
+  		self.TemperC	= self.TemperC()	#溫度(攝氏)
+  		self.TemperF 	= self.TemperF()	#溫度(華視)
+  		self.sensor 	= self.sensor()		#可燃氣
+  		self.Air 		= self.Air ()		#空氣清晰度
+  		self.Dust 		= self.Dust()		#粉成濃度
+  		self.ampere 	= self.ampere()		#安培量
+
 
 		self.render = web.template.render("view")
-	
+
 	def GET(self):
-		if session.logged_in == False:
-			raise web.seeother('/')
 		
-		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
+		print("----------------------------------------------")
+		print(self.humidity)
+		print(self.TemperC)
+		print(self.TemperF)
+		print(self.sensor)
+		print(self.Air)
+		print(self.Dust)
+		print(self.ampere)
+
+		if session.get('logged_in', False):
+			return self.render.EnvironmentCurrentState(self.humidity, self.TemperC, self.TemperF, self.sensor, self.Air, self.Dust, self.ampere )
+        
+		raise web.seeother('/')
+	def POST(self):
+		print("----------------------------------------------")
+		print(self.humidity)
+		print(self.TemperC)
+		print(self.TemperF)
+		print(self.sensor)
+		print(self.Air)
+		print(self.Dust)
+		print(self.ampere)
+		print("----------------------------------------------")
+		return self.render.EnvironmentCurrentState(self.humidity, self.TemperC, self.TemperF, self.sensor, self.Air, self.Dust, self.ampere )
+
+		
+	def conn(self):
+		
+
+		try:
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error, msg:
+			sys.stderr.write("[ERROR] %s\n" % msg[1])
+			sys.exit(1)
+
+		try:
+			sock.connect((str(self.arduinoIP), int(self.arduinoPort)))
+			print("Arduino connect OK!!")
+		except socket.error, msg:
+			sys.stderr.write("[ERROR] %s\n" % msg[1])
+			exit(1)
+
+		return sock
+	def Humidity(self):
+		sock = self.conn()
+		sock.send("Humidity")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def TemperC(self):
+		sock = self.conn()
+		sock.send("TemperC")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def TemperF(self):
+		sock = self.conn()
+		sock.send("TemperF")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def sensor(self):
+		sock = self.conn()
+		sock.send("sensor")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def Air(self):
+		sock = self.conn()
+		sock.send("Air")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def Dust(self):
+		sock = self.conn()
+		sock.send("Dust")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def ampere(self):
+		sock = self.conn()
+		sock.send("ampere")
+		data = sock.recv(1024)
+		sock.close()
+		return data
 class EnvironmentPastValueTable:
 	def __init__(self):
 		#Value definition
@@ -476,31 +542,119 @@ class EnvironmentPastValueFigure:
 			raise web.seeother('/')
 		return self.render.EnvironmentPastValueFigure()
 
-
-#---------------------------------------------------------------------------測試用
+#---------------------------------------------------------------------------testClass
 class EnvironmentCurrentState_testClass:
-	
 	def __init__(self):
-		self.T = 26
-		self.H = 60
-		self.G = 200
-		self.A = 250
-		self.C = 0.6
-		self.CD = 32.1
+		self.render = web.template.render("view")
 
+	def GET(self):
+		return self.render.EnvironmentCurrentState()
+class value_testClass:
+	def __init__(self):
 		#Databse definition
 		conf = ConfigParser.ConfigParser()
 		conf.read("test.conf")
 		self.arduinoIP 		= conf.get("arduino address", "ip"		)
 		self.arduinoPort 	= conf.get("arduino address", "port"	)
 
+  		self.humidity   = self.Humidity()	#濕度
+  		self.TemperC	= self.TemperC()	#溫度(攝氏)
+  		self.TemperF 	= self.TemperF()	#溫度(華視)
+  		self.sensor 	= self.sensor()		#可燃氣
+  		self.Air 		= self.Air ()		#空氣清晰度
+  		self.Dust 		= self.Dust()		#粉成濃度
+  		self.ampere 	= self.ampere()		#安培量
+
+
 		self.render = web.template.render("view")
 	
 	def GET(self):
-		if session.logged_in == False:
-			raise web.seeother('/')
+		value = {	'Humidity'	:self.TemperC,
+					'TemperC'	:self.TemperF,
+					'TemperF'	:self.sensor,
+					'sensor'	:self.Air,
+					'Air'		:self.Dust,
+					'Dust'		:self.Dust,
+					'ampere'	:self.ampere
+				}
+		web.header('Content-Type', 'application/json')
+		return json.dumps(value)
 		
-		return self.render.EnvironmentCurrentState(self.T,self.H,self.G,self.A,self.C,self.CD)
+	def conn(self):
+		try:
+			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error, msg:
+			sys.stderr.write("[ERROR] %s\n" % msg[1])
+			sys.exit(1)
+
+		try:
+			sock.connect((str(self.arduinoIP), int(self.arduinoPort)))
+			print("Arduino connect OK!!")
+		except socket.error, msg:
+			sys.stderr.write("[ERROR] %s\n" % msg[1])
+			exit(1)
+
+		return sock
+	def Humidity(self):
+		sock = self.conn()
+		sock.send("Humidity")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def TemperC(self):
+		sock = self.conn()
+		sock.send("TemperC")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def TemperF(self):
+		sock = self.conn()
+		sock.send("TemperF")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def sensor(self):
+		sock = self.conn()
+		sock.send("sensor")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def Air(self):
+		sock = self.conn()
+		sock.send("Air")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def Dust(self):
+		sock = self.conn()
+		sock.send("Dust")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+	def ampere(self):
+		sock = self.conn()
+		sock.send("ampere")
+		data = sock.recv(1024)
+		sock.close()
+		return data
+
+
+class test:
+	def GET(self):
+		i = web.input()
+		print(i.name)
+		print(i.time)
+		v1,v2,v3,v4,v5,v6,v7 = random.randint(0,99),random.randint(0,99),random.randint(0,99),random.randint(0,99),random.randint(0,99),random.randint(0,99),random.randint(0,99)
+		value = {	'Humidity'	:v1,
+					'TemperC'	:v2,
+					'TemperF'	:v3,
+					'sensor'	:v4,
+					'Air'		:v5,
+					'Dust'		:v6,
+					'ampere'	:v7
+				}
+		web.header('Content-Type', 'application/json')
+		return json.dumps(value)
 
 #############################################################
 							#		 Safety monitoring		#

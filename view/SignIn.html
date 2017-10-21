@@ -1,4 +1,3 @@
-$def with(keye,keyn)
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +40,7 @@ $def with(keye,keyn)
 <div class="main">
     
     <center>
-        <form class="singIN" role="form" action="/login" method="POST" id="loginform">
+        <form class="singIN" role="form" action="/login" method="POST">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">
@@ -59,46 +58,11 @@ $def with(keye,keyn)
                 </div>
             </div>
             <br>
-            <input type="hidden" value="$keye" name="pubkeye" id="pubkeye"/>
-            <input type="hidden" value="$keyn" name="pubkeyn" id="pubkeyn"/>
-            <button id="dologin" type="button" class="btn btn-default">登入</button>
+            <button type="submit" class="btn btn-default">登入</button>
         </form>
-
-        <br>
-        $keye
-        <br>
-        $keyn
 
     </center>
 
 </div>
-<script>
-$$(function(){
-    $$('#dologin').click(function(){
-        var publickeye = document.getElementById("pubkeye").value;
-        var publickeyn = document.getElementById("pubkeyn").value;
-        var loginform = document.getElementById("loginform");
-        pube = publickeye;
-        pubn = publickeyn;
-        var password = document.getElementById("password").value;
-        setMaxDigits(130);
-        var key = new RSAKeyPair(pube,"",pubn);
-        var en_password = encryptedString(key, password);
-        alert("pube:" + pube + "\n" + "pubn:" + pubn + "\n" + "password:" + password + "\n" + "key:" + key + "\n" + "en_password:" + en_password);
-        document.getElementById("password").value = en_password;
-        loginform.submit();
-    })
-})
-</script>
-<input id="date" type="button" value="今天星期幾">
-<script>
-$$(function(){
-    $$('#date').click(function(){
-        var Today=new Date();
-        alert("今天日期是 " + Today.getFullYear()+ " 年 " + (Today.getMonth()+1) + " 月 " + Today.getDate() + " 日");
-    })
-})
-</script>
-
 </body>
 </html>
