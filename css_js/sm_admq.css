@@ -2,10 +2,11 @@
     /*1. Quire*/
     .Member_Q{
         height: 270px;
-        width: 99%;
+        width: 80%;
         border-radius:1%;
         background-color: #FFFFFF;
-        margin-top: 10px;
+        margin-top: 25px;
+        margin-left:50px;
     }
     .Member_Q_t{
         height: 40px;
@@ -28,11 +29,13 @@
     }
     /*2. Add*/
     .right_MemberAdd{
-        height: 400px;
-        width: 99%;
+        height: 450px;
+        width: 90%;
         border-radius:1%;
         background-color: #FFFFFF;
-        margin-top: 10px;
+        margin-top: 25px;
+        margin-left: 50px;
+
     }
     .right_MemberAdd_t{
         height: 40px;
@@ -67,10 +70,11 @@
     /*3. modify*/
     .right_MemberMod{
         height: 280px;
-        width: 99%;
+        width: 90%;
         border-radius:1%;
         background-color: #FFFFFF;
-        margin-top: 10px;
+        margin-top: 25px;
+        margin-left: 50px;
     }
     .right_MemberMod_t{
         height: 40px;
@@ -105,10 +109,11 @@
     /*4. delete*/
     .right_MemberDel{
         height: 180px;
-        width: 99%;
+        width: 90%;
         border-radius:1%;
         background-color: #FFFFFF;
-        margin-top: 10px;
+        margin-top: 25px;
+        margin-left: 50px;
     } 
     .right_MemberDel_t{
         height: 40px;

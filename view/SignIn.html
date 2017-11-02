@@ -29,18 +29,24 @@
 <body class="output container">
 
 <!--title-->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">居家物聯網監控系統</a>
+
+
+    
+        <div class="special">
+
+            <ul><h2>居家物聯網監控系統</h2>></a>
+            <!--<ul><h3>Please Signin</h3></ul>-->
+            
         </div>
-    </div>
-</nav>
+
+
+    
+
 
 <div class="main">
     
     <center>
-        <form class="singIN" role="form" action="/login" method="POST">
+        <form class="singIN" role="form" action="/login" method="POST" id="loginform">
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-addon">
@@ -58,11 +64,13 @@
                 </div>
             </div>
             <br>
-            <button type="submit" class="btn btn-default">登入</button>
+            <button id="dologin" type="submit" class="btn btn-default">登入</button>
         </form>
 
     </center>
 
 </div>
+
+
 </body>
 </html>

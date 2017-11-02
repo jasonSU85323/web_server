@@ -24,7 +24,7 @@
 <script>
     window.setInterval("show()", 1000); 
     function show() {
-        var baseurl = 'http://192.168.1.150:8006';
+        var baseurl = 'http://127.0.0.1:8000';
         $$.get(
             baseurl + '/test',
             { name: "John", time: "2pm" },
@@ -43,117 +43,157 @@
 
 
 </head>
+
 <body class="output container">
 
+
+
+
+        <div class="special">
+
+            <h2>居家物聯網監控系統</h2>
+
+        </div>
+
+
 <!--title-->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">居家物聯網監控系統</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/logout">登出</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
 
-<div class="main">
 
-    <div class="left">
+<div class="container">
+
+    <div class="signup">
+
+
         <!--環境監控-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
-                <a class="list-group-item active">環境監控</a>
-                <a href="/CurrentState"     class="list-group-item">目前數值</a>
-                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
-                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
-            </div>
-        </div>
+        <form class="form-signup">         
+
+            <a class="list-group-item active">環境監控</a>
+            <a href="/CurrentState"     class="list-group-item">目前數值</a>
+            <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
+            <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+            <br>
+               
+        </form>
+
         <!--安全監控-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
-                <a class="list-group-item active">安全監控</a>
-                <a href="/DoorLock"         class="list-group-item">門鎖</a>
-                <a href="/Monitor"          class="list-group-item">監視器</a>
-                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
-            </div>
-        </div>
+
+
+         <form class="form-signup">         
+
+            <a class="list-group-item active">安全監控</a>
+            <a href="/DoorLock"         class="list-group-item">門鎖</a>
+            <a href="/Monitor"          class="list-group-item">監視器</a>
+            <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+            <br>
+               
+        </form>
+
         <!--系統設定-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
-                <a class="list-group-item active">系統設定</a>
-                <a href="/Member/Quire" class="list-group-item">成員</a>
-                <a href="/SystemReportDay" class="list-group-item">報表</a>
-                <a href="/SetUp" class="list-group-item">設定</a>
-            </div>
-        </div>
+        <form class="form-signup">         
+
+            <a class="list-group-item active">系統設定</a>
+            <a href="/SystemReportDay" class="list-group-item">報表</a>
+            <a href="/SetUp" class="list-group-item">設定</a>
+            <br>
+               
+        </form>
+
+        <form class="form-signup">         
+      
+            <a href="#" class="list-group-item">登出</a>
+                                    
+        </form>
+
+
     </div>
 
 
-    <div class="right">
-        <!--第一排-->
-        <div class="right_t">
-            <div class="ele">
-                <div class="ele_t ele_t_font">濕度</div>
+
+
+
+
+
+    <div class="signin">
+
+
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >温度</a>
+                <div class="ele_b">                  
+                    <input type="text" class="list-group-item-two" id="Humidity"  readonly="value">
+                </div>        
+        </form>
+
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >濕度</a>
                 <div class="ele_b">
-                    <input type="text" class="ele_b_font ele_b_input" id="Humidity"  readonly="value">
-                </div>
-            </div>
-            <div class="ele">
-                <div class="ele_t ele_t_font">溫度(攝氏)</div>
-                <div class="ele_b">                   
-                    <input type="text" class="ele_b_font ele_b_input" id="TemperC"  readonly="value">
-                </div>
-            </div>
-            <div class="ele">
-                <div class="ele_t ele_t_font">溫度(華氏)</div>
-                <div class="ele_b">                  
-                    <input type="text" class="ele_b_font ele_b_input" id="TemperF"  readonly="value">
-                </div>
-            </div>
-        </div>
-        <!--第二排-->
-        <div class="right_t">
-            <div class="ele">
-                <div class="ele_t ele_t_font">可燃氣</div>
-                <div class="ele_b">                  
-                    <input type="text" class="ele_b_font ele_b_input" id="sensor"  readonly="value">
-                </div>
-            </div>
-            <div class="ele">
-                <div class="ele_t ele_t_font">空氣清晰度</div>
-                <div class="ele_b">                  
-                    <input type="text" class="ele_b_font ele_b_input" id="Air"  readonly="value">
-                </div>
-            </div>
-            <div class="ele">
-                <div class="ele_t ele_t_font">粉成濃度</div>
-                <div class="ele_b">                 
-                    <input type="text" class="ele_b_font ele_b_input" id="Dust"  readonly="value">
-                </div>
-            </div>
-        </div>
-        <!--第三排-->
-        <div class="right_t">
-            <div class="ele">
-                <div class="ele_t ele_t_font">安培量</div>
-                <div class="ele_b">         
-                    <input type="text" class="ele_b_font ele_b_input" id="ampere"  readonly="value">
-                </div>
-            </div>
-            <div class="ele">
-                <div class="ele_t ele_t_font">插座狀態</div>
+                    <input type="text" class="list-group-item-two" id="TemperC"  readonly="value">
+                </div>        
+        </form>
+
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >可燃氣濃度</a>
                 <div class="ele_b">
-                    <p class="ele_b_font" id="p1">關</p></div>
-            </div>
-        </div>
+                   <input type="text" class="list-group-item-two" id="sensor"  readonly="value">
+                </div>        
+        </form>
+
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >空氣清晰度</a>
+                <div class="ele_b">
+                   <input type="text" class="list-group-item-two" id="Air" readonly="value">
+                </div>        
+        </form>
+
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >電流</a>
+                <div class="ele_b">
+                   <input type="text" class="list-group-item-two" id="ampere" readonly="value">
+                </div>        
+        </form>
+
+        
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >華氏度</a>
+                <div class="ele_b">
+                   <input type="text" class="list-group-item-two" id="TemperF" readonly="value">
+                </div>        
+        </form>
+
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >粉塵濃度</a>
+                <div class="ele_b">
+                   <input type="text" class="list-group-item-two" id="Dust" readonly="value">
+                </div>        
+        </form>
+ 
+ 
+
+        <form class="form-signup">         
+
+            <a class="list-group-item active" >插座狀態</a>
+                <div class="ele_b">
+                    <input type="text" class="list-group-item-two" id=""  readonly="value">
+                </div>        
+        </form>
+
+            
     </div>
-    
 
 </div>
 
-</body>
+
 </html>

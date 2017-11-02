@@ -1,11 +1,12 @@
 /*System Report*/
     /*1. Select report*/
     .SR{
-        height: 120px;
-        width: 99%;
+        height: 150px;
+        width: 90%;
         border-radius:1%;
         background-color: #FFFFFF;
-        margin-top: 10px;
+        margin-top: 25px;
+        margin-left:50px;
     }
     .SR_t{
         height: 40px;
@@ -26,13 +27,15 @@
         float:right;
         padding-top: 5px;
     }
+
     /*2. Daily report*/
     .DR{
-        height: 300px;
-        width: 99%;
+        height: 365px;
+        width: 90%;
         border-radius:1%;
         background-color: #FFFFFF;
-        margin-top: 10px;
+        margin-top: 25px;
+        margin-left:50px;
     }
     .DR_t{
         height: 40px;

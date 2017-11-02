@@ -71,55 +71,82 @@ function Function_A(){
 <body class="output container">
 
 <!--title-->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+    <div class="special">
+
+            <br>
+            <br>
+            <br>
+            <br>
+
+    </div>
+
+
+<nav class="navbar navbar-one navbar-fixed-top" role="navigation">
     <div class="container-fluid">
+        
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">居家物聯網監控系統</a>
+            <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/logout">登出</a></li>
-            </ul>
-        </div>
+
     </div>
 </nav>
 
 
-<div class="main">
 
-    <div class="left">
+<div class="signup-three">
+
+    <div class="form-signup">
         <!--環境監控-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
+        <form class="form-signup">         
+
                 <a class="list-group-item active">環境監控</a>
                 <a href="/CurrentState"     class="list-group-item">目前數值</a>
                 <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
                 <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
-            </div>
-        </div>
+                <br>
+             
+        </form>
+
+
         <!--安全監控-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
+
+        <form class="form-signup">         
+
                 <a class="list-group-item active">安全監控</a>
                 <a href="/DoorLock"         class="list-group-item">門鎖</a>
                 <a href="/Monitor"          class="list-group-item">監視器</a>
                 <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
-            </div>
-        </div>
+                <br>
+             
+        </form>
+
         <!--系統設定-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
+
+        <form class="form-signup">         
+
                 <a class="list-group-item active">系統設定</a>
                 <a href="/Member/Quire" class="list-group-item">成員</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
                 <a href="/SetUp" class="list-group-item">設定</a>
-                
-            </div>
-        </div>
+                <br>
+             
+        </form>
+
+
+        <form class="form-signup">        
+            
+            <a href="#" class="list-group-item">登出</a>
+                                
+        </form>
+
+        
     </div>
 
+</div>
 
-    <div class="right">
+
+<div class="right">
         <!--修改-->
         <div class="right_MemberMod">
             <div class="right_MemberAdd_t">

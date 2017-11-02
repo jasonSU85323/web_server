@@ -1,5 +1,3 @@
-$def with(str, date_y, date_m, date_d, time, data_v, data_s)
-$var content_type: text/html
 <!DOCTYPE html>
 <html>
 <head>  
@@ -94,56 +92,114 @@ $var content_type: text/html
 		        }
 	        };
         })(jQuery);
-    </script>    
+    </script>
+    <script>
+        var alldata; //全域變數，存取收到的data
+
+        function Qdata() {
+            var index_name = document.getElementById("index_name").value
+            var Y = document.getElementById("Y").value
+            var M = document.getElementById("M").value
+            var D = document.getElementById("D").value
+
+            var baseurl = 'http://127.0.0.1:8000';
+            $$.post(
+                baseurl + '/EPtest',
+                {   index_name: index_name,
+                    Y: Y,
+                    M: M, 
+                    D: D
+                },
+                function(data){
+                    alldata = data; //將data存入全域變數
+                    $$("#mt tbody").html(""); //清空表格
+                    var s = document.getElementById('Z');
+                    s.options.length = 0; //清空頁碼下拉選單
+
+                    count = Math.ceil(alldata.length/10) //取得總頁數
+                    for(i=1; i<=count; i++){ //新增頁碼
+                        var new_option = new Option(i,i*10-9)
+                        s.options.add(new_option);
+                    }
+
+                    for(i=0;i<10;i++){
+                        $$('#mt tbody').append(
+                            "<tr>"
+                                +"<td>"+Number(i+1)+"</td>"
+                                +"<td>"+String(alldata[i]["year"])+" / "+String(alldata[i]["month"])+" / "+String(alldata[i]["day"])+"</td>"
+                                +"<td>"+String(alldata[i]["hour"]) + ":00"+"</td>"
+                                +"<td>"+String(alldata[i]["V"])+"</td>"
+                            +"</tr>"
+                            );
+                    }
+                                        
+                }
+            );    
+        }
+        function test() {
+            $$("#mt tbody").html(""); //清空表格
+            var s = document.getElementById('Z');
+            for(i=Number(s.value); i<Number(s.value)+10; i++){
+                $$('#mt tbody').append(
+                    "<tr>"
+                        +"<td>"+Number(i)+"</td>"
+                        +"<td>"+String(alldata[i-1]["year"])+" / "+String(alldata[i-1]["month"])+" / "+String(alldata[i-1]["day"])+"</td>"
+                        +"<td>"+String(alldata[i-1]["hour"]) + ":00"+"</td>"
+                        +"<td>"+String(alldata[i-1]["V"])+"</td>"
+                    +"</tr>"
+                    );
+            }
+            alert(alldata[12]["year"])
+        }
+    </script> 
 </head>
+
+
 <body class="output container">
-
-<!--title-->
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">居家物聯網監控系統</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="/logout">登出</a></li>
-            </ul>
-        </div>
+    
+    <div class="special">
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
-</nav>
+    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+            </div>
+        </div>
+    </nav>
+    <div class="signup-three">
 
-
-<div class="main">
-
-    <div class="left">
-        <!--環境監控-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
+        <div class="form-signup">
+            <!--環境監控-->
+            <form class="form-signup">         
                 <a class="list-group-item active">環境監控</a>
                 <a href="/CurrentState"     class="list-group-item">目前數值</a>
                 <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
                 <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
-            </div>
-        </div>
-        <!--安全監控-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
+                <br>
+            </form>
+            <form class="form-signup">         
                 <a class="list-group-item active">安全監控</a>
                 <a href="/DoorLock"         class="list-group-item">門鎖</a>
                 <a href="/Monitor"          class="list-group-item">監視器</a>
                 <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
-            </div>
-        </div>
-        <!--系統設定-->
-        <div class="col-sm-2 leftfloat">
-            <div class="list-group">
+                <br>
+            </form>
+            <form class="form-signup">
                 <a class="list-group-item active">系統設定</a>
-                <a href="/Member/Quire" class="list-group-item">成員</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
                 <a href="/SetUp" class="list-group-item">設定</a>
-            </div>
+                <br>
+            </form>
+            <form class="form-signup">        
+                <a href="#" class="list-group-item">登出</a>              
+            </form>
         </div>
     </div>
+
 
     <div class="right">
         <!--整合-->
@@ -151,27 +207,30 @@ $var content_type: text/html
             <div class="E_table_t">
                 <div class="E_table_t_L">
                     <!--// 下拉是選單(年/月/日)-->
-                    <form action="/PastValueTable" method="POST">
-                        <select style="width:85px;float:left;" class=" form-control input-sm" name="index_name">
-                            <option value="temp">       1.溫度</option>
-                            <option value="humidity">   2.濕度</option>
-                            <option value="cgc">        3.可燃氣濃度</option>
-                            <option value="ac">         4.空氣清晰度</option>
+                    <form action="/EventRecord" method="POST">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="index_name" id="index_name">
+                            <option value="Humidity">   1.濕度</option>
+                            <option value="TemperC">    2.溫度(攝氏)</option>
+                            <option value="TemperF">    3.溫度(華視)</option>
+                            <option value="sensor">     4.可燃氣</option>
+                            <option value="Air">        5.空氣清晰度</option>
+                            <option value="Dust">       6.粉成濃度</option>
+                            <option value="ampere">     7.安培量</option>
                         </select>
-                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y" id="Y">
                             <option value="2017">2017年</option>
                             <option value="2018">2018年</option>
                             <option value="2019">2019年</option>
                             <option value="all">All</option>
                         </select>
-                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M">
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M" id="M">
                             <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
                             <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
                             <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
                             <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
                             <option value="all">All</option>
                         </select>
-                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D">
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D" id="D">
                             <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
                             <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
                             <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
@@ -185,49 +244,28 @@ $var content_type: text/html
                             <option value="31">31日</option>
                             <option value="all">All</option>
                         </select>
-                        <button type="submit" class="btn btn-default btn-sm" value="temperature" name="Submit">送出</button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="Qdata()">送出</button>
+                        
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="Z" id="Z"></select>
+                        <button type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
                     </form>
                 </div>
-                    
-                <div class="E_table_t_R">
-                    <!--// 放分頁的 HTML 物件-->
-                    <span id='table_page1'></span>
-                </div>
-                
             </div>
-                <table id = "tb1" class="table table-hover">
-                    <!---->
+            <div class="E_table_b">
+                <table id="mt" class="metable table table-hover">
                     <thead>
                         <tr>
                             <th>項次</th>
                             <th>日期</th>
                             <th>時間</th>
-                            <th>$str</th>
-                            <th>狀態</th>
+                            <th>值</th>
                         </tr>
                     </thead>
-                    $for i in range(0,len(date_y)):
-                        <tbody>
-                            <tr>
-                                <td>$(i+1)</td>
-                                <td>$date_y[i]/$date_m[i]/$date_d[i]</td>
-                                <td>$time[i]:00</td>
-                                <td>$data_v[i]</td>
-                                <td>$data_s[i]</td>
-                            </tr>
-                        </tbody>
-                    <!---->
+                    <tbody>
+                    </tbody>
                 </table>
-
+            </div>
         </div>
-
     </div>
-    
-
-</div>
-<script>
-    // 使用 TablePage 功能，參數1是放分頁的 HTML 物件，例如 span，參數2是每頁幾筆
-    jQuery("#tb1").tablepage(jQuery("#table_page1"), 10);
-</script>
 </body>
 </html>

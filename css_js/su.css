@@ -1,38 +1,74 @@
-.setR{
-    height: 300px;
-    width: 99%;
-    border-radius:1%;
-    background-color: #FFFFFF;
-    margin-top: 10px;
-}
-.setR_t{
-    height: 40px;
-    width: 100%;
-    border-radius:1%;
-    background-color: #99BBFF;   
-}
-.setR_t_L{
-    height: 40px;
-    width: 500px;
-    float:left;
-    padding-top: 5px;
-    padding-left: 5px;
-}
-.setR_t_R{
-    height: 40px;
-    width: 200px;
-    float:right;
-    padding-top: 5px;
-}
-.setR_b{
-    height: 300px;
-    width: 100%;
-    padding-left: 150px;
-    padding-right: 150px;
-}
-.setR_form{
-    height: 100px;
-    width: 100%;
-    padding-top: 15px;
-    float:left; 
-}
+/*System Report*/
+    /*1. Select report*/
+    .set_SR{
+        height: 315px;
+        width: 90%;
+        border-radius:1%;
+        background-color: #FFFFFF;
+        margin-top: 25px;
+        margin-left:50px;
+    }
+    .set_SR_t{
+        height: 40px;
+        width: 100%;
+        border-radius:1%;
+        background-color: #99BBFF;   
+    }
+    .set_SR_t_L{
+        height: 40px;
+        width: 500px;
+        float:left;
+        padding-top: 5px;
+        padding-left: 5px;
+    }
+    .set_SR_t_R{
+        height: 40px;
+        width: 200px;
+        float:right;
+        padding-top: 5px;
+    }
+    .metable{
+        width: 95%;
+    }
+
+    /*2. Daily report*/
+    .set_DR{
+        height: 200px;
+        width: 90%;
+        border-radius:1%;
+        background-color: #FFFFFF;
+        margin-top: 25px;
+        margin-left:50px;
+    }
+    .set_DR_t{
+        height: 40px;
+        width: 100%;
+        border-radius:1%;
+        background-color: #99BBFF;   
+    }
+    .set_DR_t_L{
+        height: 40px;
+        width: 500px;
+        float:left;
+        padding-top: 5px;
+        padding-left: 5px;
+    }
+    .set_DR_t_R{
+        height: 40px;
+        width: 200px;
+        float:right;
+        padding-top: 5px;
+    }
+    .set_DR_b{
+        height: 300px;
+        width: 100%;
+        padding-left: 150px;
+        padding-right: 150px;
+    }
+    .set_DR_form{
+        height: 100px;
+        width: 95%;
+        padding-top: 15px;
+        float:left; 
+    }
+/*----------------------------------------------*/
