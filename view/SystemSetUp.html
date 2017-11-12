@@ -1,3 +1,4 @@
+$def with(host_ip)
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,10 +16,10 @@
     <script language="javascript">
         var alldata; //全域變數，存取收到的data
         function ShowHello(){
-            var baseurl = 'http://127.0.0.1:8000';
+            var host_ip = document.getElementById("host_ip").value;
             //***求帳密***
             $$.post(
-                baseurl + '/SetUp',
+                host_ip + '/SetUp',
                 { 
                     postdata: "UandP"
                 },
@@ -29,7 +30,7 @@
             );
             //***求會員***
             $$.post(
-                baseurl + '/SetUp',
+                host_ip + '/SetUp',
                 { 
                     postdata: "homedata"  
                 },
@@ -51,6 +52,7 @@
                                 +"<td>"+Number(i+1)+"</td>"
                                 +"<td>"+String(data[i]["phone"])+"</td>"
                                 +"<td>"+String(data[i]["email"])+"</td>"
+                                +"<td>"+String(data[i]["card"])+"</td>"
                             +"</tr>"
                             );
                     }
@@ -67,6 +69,7 @@
                         +"<td>"+Number(i)+"</td>"
                         +"<td>"+String(alldata[i-1]["phone"])+"</td>"
                         +"<td>"+String(alldata[i-1]["email"])+"</td>"
+                        +"<td>"+String(alldata[i-1]["card"])+"</td>"
                     +"</tr>"
                     );
             }
@@ -76,12 +79,8 @@
 
 </head>
 <body class="output container" onload="ShowHello()">
-    <div class="special">
-        <br>
-        <br>
-        <br>
-        <br>
-    </div>
+    <input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
+
     <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -91,7 +90,7 @@
     </nav>
     <div class="signup-three">
 
-        <div class="form-signup">
+        <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
                 <a class="list-group-item active">環境監控</a>
@@ -158,13 +157,18 @@
                 <div class="text_1">通知人員</div>
                 <select style="width:70px;float:left;" class=" form-control input-sm" name="Z" id="Z"></select>
                 <button type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
+                <a type="button" href="/Member/Add" class="btn btn-default btn-sm">新增</a>
+                <a type="button" href="/Member/Modify" class="btn btn-default btn-sm">修改</a>
+                <a type="button" href="/Member/Delete" class="btn btn-default btn-sm">刪除</a>
+                <a type="button" href="/SystemSetUpcard" class="btn btn-default btn-sm">刪除卡片</a>
             </div>
-            <table id="mt" class="metable table table-hover">
+            <table id="mt" class="table table-hover">
                 <thead>
                     <tr>
                         <th>項次</th>
-                        <th>電子郵件</th>
                         <th>電話</th>
+                        <th>電子郵件</th>
+                        <th>登入卡片</th>
                     </tr>
                 </thead>
                 <tbody>

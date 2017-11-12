@@ -1,3 +1,4 @@
+$def with(host_ip)
 <!DOCTYPE html>
 <html>
 <head>  
@@ -102,9 +103,9 @@
             var M = document.getElementById("M").value
             var D = document.getElementById("D").value
 
-            var baseurl = 'http://127.0.0.1:8000';
+            var host_ip = document.getElementById("host_ip").value;
             $$.post(
-                baseurl + '/EPtest',
+                host_ip + '/EPtest',
                 {   index_name: index_name,
                     Y: Y,
                     M: M, 
@@ -156,13 +157,8 @@
 
 
 <body class="output container">
+    <input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
     
-    <div class="special">
-        <br>
-        <br>
-        <br>
-        <br>
-    </div>
     <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -172,7 +168,7 @@
     </nav>
     <div class="signup-three">
 
-        <div class="form-signup">
+        <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
                 <a class="list-group-item active">環境監控</a>
@@ -200,7 +196,6 @@
         </div>
     </div>
 
-
     <div class="right">
         <!--整合-->
         <div class="E_table">
@@ -208,7 +203,7 @@
                 <div class="E_table_t_L">
                     <!--// 下拉是選單(年/月/日)-->
                     <form action="/EventRecord" method="POST">
-                        <select style="width:85px;float:left;" class=" form-control input-sm" name="index_name" id="index_name">
+                        <select style="width:150px;float:left;" class=" form-control input-sm" name="index_name" id="index_name">
                             <option value="Humidity">   1.濕度</option>
                             <option value="TemperC">    2.溫度(攝氏)</option>
                             <option value="TemperF">    3.溫度(華視)</option>
@@ -246,13 +241,14 @@
                         </select>
                         <button type="button" class="btn btn-default btn-sm" onclick="Qdata()">送出</button>
                         
-                        <select style="width:70px;float:left;" class=" form-control input-sm" name="Z" id="Z"></select>
-                        <button type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
+                        
+                        <button style="width:70px;float:right;" type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
+                        <select style="width:70px;float:right;" class=" form-control input-sm" name="Z" id="Z"></select>
                     </form>
                 </div>
             </div>
             <div class="E_table_b">
-                <table id="mt" class="metable table table-hover">
+                <table id="mt" class="table table-hover">
                     <thead>
                         <tr>
                             <th>項次</th>

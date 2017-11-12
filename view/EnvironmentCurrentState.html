@@ -1,3 +1,4 @@
+$def with(host_ip)
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,9 +25,9 @@
 <script>
     window.setInterval("show()", 1000); 
     function show() {
-        var baseurl = 'http://127.0.0.1:8000';
+        var host_ip = document.getElementById("host_ip").value;
         $$.get(
-            baseurl + '/test',
+            host_ip + '/test',
             { name: "John", time: "2pm" },
             function(data){
                 $$('#Humidity').val(data.Humidity);
@@ -45,7 +46,7 @@
 </head>
 
 <body class="output container">
-
+    <input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
 
 
 

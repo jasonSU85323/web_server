@@ -51,8 +51,16 @@ urls = (
 	'/PastValueFigure'	,'EnvironmentPastValueFigure',			# Past value (figure)
 
 	'/DoorLock'			,'SafetyDoorLock',						# Door lock
+	'/DLAgent','DLAgent',
+	'/DLRecord','DLRecord',
+	'/DLadd','DLadd',
+	'/DLdel','DLdel',
+
 	'/Monitor'			,'SafetyMonitor',						# Camera
+	
 	'/EventRecord'		,'SafetyEventRecord',					# Event record
+	'/EventRecord_E'	,'Event_E',
+	'/EventRecord_C'	,'Event_C',
 
 	'/Member/Quire'		,'SystemMemberQuire',					# Member Quire
 	'/Member/Add'		,'SystemMemberAdd',						# Member Add
@@ -62,8 +70,11 @@ urls = (
 	'/SystemReportDay'	,'SystemReportDay',						# ReportDay
 	'/SystemReportWeek'	,'SystemReportWeek',					# ReportWeek
 	'/SystemReportMonth','SystemReportMonth',					# ReportMonth
+	
 	'/SetUp'			,'SystemSetUp',							# ??
-	'/SetUpdata'		,'SystemSetUpdata',	
+	'/SetUpdata'		,'SystemSetUpdata',
+	'/SystemSetUpcard'	,'SystemSetUpcard',
+
 	'/images'  			,'images'
 					# ??
 
@@ -178,7 +189,7 @@ class Login:
 		usernumb = i.user
 		password = i.password
 
-		sql = "SELECT account, password FROM member_information"
+		sql = "SELECT account, password FROM top"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
 		dbuasr = data[0][0]
@@ -416,6 +427,11 @@ class value:
 		return data
 class EnvironmentPastValueTable:
 	def __init__(self):
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.host_ip = conf.get("host", "ip")
+
 		#Template definition
 		self.render = web.template.render("view")
 
@@ -423,7 +439,7 @@ class EnvironmentPastValueTable:
 		if session.logged_in == False:
 			raise web.seeother('/')
 
-   		return self.render.EnvironmentPastValueTable()
+   		return self.render.EnvironmentPastValueTable(self.host_ip)
 class EPtest:
 	def __init__(self):
 		#Value definition
@@ -481,14 +497,19 @@ class EnvironmentPastValueFigure:
 		return self.render.EnvironmentPastValueFigure()
 
 #---------------------------------------------------------------------------testClass
-class EnvironmentCurrentState_testClass:
+class EnvironmentCurrentState_testClass:		
 	def __init__(self):
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.host_ip = conf.get("host", "ip")
+
 		self.render = web.template.render("view")
 
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.EnvironmentCurrentState()
+		return self.render.EnvironmentCurrentState(self.host_ip)
 class value_testClass:
 	def __init__(self):
 		#Databse definition
@@ -577,7 +598,6 @@ class value_testClass:
 		data = sock.recv(1024)
 		sock.close()
 		return data
-
 class test:
 	def GET(self):
 		i = web.input()
@@ -601,18 +621,15 @@ class test:
 class SafetyDoorLock:
 	def __init__(self):
 		self.render = web.template.render("view")
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.host_ip = conf.get("host", "ip")
+
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.SafetyDoorLock()
-class SafetyMonitor:
-	def __init__(self):
-		self.render = web.template.render("view")
-	def GET(self):
-		if session.logged_in == False:
-			raise web.seeother('/')
-		return self.render.SafetyMonitor()
-class SafetyEventRecord:
+		return self.render.SafetyDoorLock(self.host_ip)
+class DLAgent:
 	def __init__(self):
 		#Value definition
 		self.mode = []
@@ -628,15 +645,220 @@ class SafetyEventRecord:
 		self.cursor = self.db.cursor()
 		#Template definition
 		self.render = web.template.render("view")
+
+	def POST(self):
+		i = web.input()
+		tt = i.tt
+		print(tt)
+		sql = "SELECT year, month, day, hour, min, w_card FROM agent"
+				
+		print(sql)
+
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+
+   		for row in data:
+   			v = {'year':int(row[0]), 'month':int(row[1]), 'day':int(row[2]), 'hour':int(row[3]), 'min':int(row[4]), 'w_card':str(row[5])}
+   			self.mode.append(v)
+   		self.db.close()
+
+		web.header('Content-Type', 'application/json')
+		return json.dumps(self.mode)
+class DLRecord:
+	def __init__(self):
+		#Value definition
+		self.mode = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+
+	def POST(self):
+		i = web.input()
+		y = i.Y
+		m = i.M
+		d = i.D
+		
+		sql = "SELECT year, month, day, hour, min, event FROM swipe"
+				
+		print(sql)
+
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+
+   		for row in data:
+   			v = {'year':int(row[0]), 'month':int(row[1]), 'day':int(row[2]), 'hour':int(row[3]), 'min':int(row[4]), 'event':str(row[5])}
+   			self.mode.append(v)
+   		self.db.close()
+
+		web.header('Content-Type', 'application/json')
+		return json.dumps(self.mode)
+class DLadd:
+	def __init__(self):
+		#Value definition
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+	def POST(self):
+		self.i = web.input()
+		
+		# 1.QQQ
+		sql = "SELECT phone FROM member_information WHERE phone=\'" + self.i.phone + "\'"
+		print(sql)
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+		if len(data) == 0 :
+			return "無此手機號碼"
+
+		# 2.ADD
+		sql = "UPDATE member_information SET card = \'"+ self.i.card_id +"\' WHERE phone=\'" + self.i.phone + "\'"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+
+		# 3.del
+		sql = "DELETE FROM agent WHERE w_card = '" + self.i.card_id + "'"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+
+		self.db.close()
+		return "OK"
+class DLdel:
+	def __init__(self):
+		#Value definition
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+	def POST(self):
+		self.i = web.input()
+		
+		sql = "DELETE FROM agent "
+		sql += "WHERE w_card = '" + self.i.card_id + "'"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+		self.db.close()
+		return "OK"
+
+class SafetyMonitor:
+	def __init__(self):
+		self.render = web.template.render("view")
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.SafetyEventRecord()
+		return self.render.SafetyMonitor()
+
+class SafetyEventRecord:
+	def __init__(self):
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.host_ip = conf.get("host", "ip")
+		#Template definition
+		self.render = web.template.render("view")
+	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyEventRecord(self.host_ip)
+class Event_E:
+	def __init__(self):
+		#Value definition
+		self.mode = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		self.host_ip = conf.get("host", "ip")
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyEventRecord(self.host_ip)
 		
 	def POST(self):
 		self.i = web.input()
 
-		sql = "SELECT year, month, day, hour, min, event FROM event WHERE year = \'" +self.i.Y+"\'"
+		sql = "SELECT year, month, day, hour, min, event FROM event_environment WHERE year = \'" +self.i.Y+"\'"
+		if self.i.M not in "all":
+			sql += " AND month = \'" + self.i.M + "\'"
+		if self.i.D not in "all":
+			sql += " AND day = \'"   + self.i.D + "\'"
+		print(sql)
+
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+
+   		for row in data:
+   			v = {'year':int(row[0]), 'month':int(row[1]), 'day':int(row[2]), 'hour':int(row[3]), 'min':int(row[4]), 'event':str(row[5])}
+   			self.mode.append(v)
+   		self.db.close()
+   		print(self.mode)
+		web.header('Content-Type', 'application/json')
+		return json.dumps(self.mode)
+class Event_C:
+	def __init__(self):
+		#Value definition
+		self.mode = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		self.host_ip = conf.get("host", "ip")
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyEventRecord(self.host_ip)
+		
+	def POST(self):
+		self.i = web.input()
+
+		sql = "SELECT year, month, day, hour, min, event FROM event_security WHERE year = \'" +self.i.Y+"\'"
 		if self.i.M not in "all":
 			sql += " AND month = \'" + self.i.M + "\'"
 		if self.i.D not in "all":
@@ -698,8 +920,6 @@ class SystemMemberQuire:
 class SystemMemberAdd:
 	def __init__(self):
 		#Value definition
-		self.number = []
-		self.password = []
 		self.phone = []
 		self.email = []
 		#Databse definition
@@ -721,13 +941,13 @@ class SystemMemberAdd:
 		return render.SystemMemberAdd()
 	def POST(self):
 		self.i = web.input()
-		sql = "INSERT INTO member_information(account, passwore, phone, email) VALUES "
-		sql += "('" + self.i.account +"', '"+ self.i.password +"', '"+ self.i.phone +"', '"+self.i.email+"')" 
+		sql = "INSERT INTO member_information(phone, email) VALUES "
+		sql += "('" + self.i.phone +"', '"+self.i.email+"')" 
 		print(sql)
 		self.cursor.execute(sql)
 		self.db.commit()
 		self.db.close()
-		raise web.seeother('/Member/Quire')
+		raise web.seeother('/SetUp')
 class SystemMemberModify:
 	def __init__(self):
 		#Value definition
@@ -752,7 +972,7 @@ class SystemMemberModify:
 		if session.logged_in == False:
 			raise web.seeother('/')
 		
-		sql = "SELECT account FROM member_information"
+		sql = "SELECT phone FROM member_information"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
    		for row in data:
@@ -763,12 +983,12 @@ class SystemMemberModify:
 	def POST(self):
 		self.i = web.input()
 		sql = "UPDATE member_information SET "
-		sql += self.i.setname + "='" + self.i.settxt + "' WHERE account = '" + self.i.account + "'"
+		sql += self.i.setname + "='" + self.i.settxt + "' WHERE phone = '" + self.i.account + "'"
 		print(sql)
 		self.cursor.execute(sql)
 		self.db.commit()
 		self.db.close()
-		raise web.seeother('/Member/Quire')
+		raise web.seeother('/SetUp')
 class SystemMemberDeiete:
 	def __init__(self):
 		#Value definition
@@ -793,7 +1013,7 @@ class SystemMemberDeiete:
 		if session.logged_in == False:
 			raise web.seeother('/')
 
-		sql = "SELECT account FROM member_information"
+		sql = "SELECT phone FROM member_information"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
    		for row in data:
@@ -804,12 +1024,12 @@ class SystemMemberDeiete:
 	def POST(self):
 		self.i = web.input()
 		sql = "DELETE FROM member_information "
-		sql += "WHERE account = '" + self.i.account + "'"
+		sql += "WHERE phone = '" + self.i.account + "'"
 		print(sql)
 		self.cursor.execute(sql)
 		self.db.commit()
 		self.db.close()
-		raise web.seeother('/Member/Quire')
+		raise web.seeother('/SetUp')
 
 #---# 2__Report__
 class SystemReportDay:
@@ -922,10 +1142,10 @@ class SystemReportDay:
 				sheet1.write(c,l  , self.dictionarClass[str(ck)][c-1])
    				l += 1
 		#保存該excel文件
-		A = str(self.DownloadAddress) + "/日報表" + Y + "年" + M + "月" + D + "日.xls"
+		A = str(self.DownloadAddress) + "/Day" + Y + "_" + M + "_" + D + ".xls"
 		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
-		path = str(self.DownloadIP) +  "/日報表" + Y + "年" + M + "月" + D + "日.xls"
+		path = str(self.DownloadIP) +  "/Day" + Y + "_" + M + "_" + D + ".xls"
 		log = "yes"
 		return self.render.SystemReportDay(path, log)
 class SystemReportWeek:
@@ -1038,10 +1258,10 @@ class SystemReportWeek:
 				sheet1.write(c,l  , self.dictionarClass[str(ck)][c-1])
    				l += 1
 		#保存該excel文件
-		A = str(self.DownloadAddress) + "/周報表" + Y + "年" + M + "月" + D + "至" + str(int(D)+6) + "日.xls"
+		A = str(self.DownloadAddress) + "/Week" + Y + "_" + M + "_" + D + "_" + str(int(D)+6) + ".xls"
 		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
-		path = str(self.DownloadIP) + "/周報表" + Y + "年" + M + "月" + D + "至" + str(int(D)+6) + "日.xls"
+		path = str(self.DownloadIP) + "/Week" + Y + "_" + M + "_" + D + "_" + str(int(D)+6) + ".xls"
 		log = "yes"
 		return self.render.SystemReportWeek(path, log)
 class SystemReportMonth:
@@ -1152,10 +1372,10 @@ class SystemReportMonth:
 				sheet1.write(c,l  , self.dictionarClass[str(ck)][c-1])
    				l += 1
 		#保存該excel文件
-		A = str(self.DownloadAddress) + "/月報表" + Y + "年" + M + "月.xls"
+		A = str(self.DownloadAddress) + "/Month" + Y + "_" + M + ".xls"
 		workbook.save(A)
 		print("創建excel文件完成!".decode('utf-8'))
-		path = str(self.DownloadIP) + "/月報表" + Y + "年" + M + "月.xls"
+		path = str(self.DownloadIP) + "/Month" + Y + "_" + M + ".xls"
 		log = "yes"
 		return self.render.SystemReportMonth(path, log)
 
@@ -1172,6 +1392,7 @@ class SystemSetUp():
 		AccountNumber 	= conf.get("MySQL Database", "account number"	)
 		Password 		= conf.get("MySQL Database", "password"			)
 		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		self.host_ip = conf.get("host", "ip")
 		
 		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
 		self.cursor = self.db.cursor()
@@ -1183,7 +1404,7 @@ class SystemSetUp():
 		if session.logged_in == False:
 			raise web.seeother('/')
 
-		return self.render.SystemSetUp()
+		return self.render.SystemSetUp(self.host_ip)
 	def POST(self):
 		i = web.input()
 		if i.postdata == "UandP":
@@ -1192,7 +1413,7 @@ class SystemSetUp():
 			return self.homedata()
 
 	def UandP(self):
-		sql = "SELECT account, password FROM member_information"
+		sql = "SELECT account, password FROM top"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
 		dbuasr = data[0][0]
@@ -1202,31 +1423,106 @@ class SystemSetUp():
 		return json.dumps(v)
 
 	def homedata(self):
-		sql = "SELECT phone,email FROM member_information"
+		sql = "SELECT phone,email,card FROM member_information"
 		self.cursor.execute(sql)
 		data = self.cursor.fetchall()
 
    		for row in data:
-   			v = {'phone':str(row[0]), 'email':str(row[1])}
+   			v = {'phone':str(row[0]), 'email':str(row[1]), 'card':str(row[2])}
    			self.mode.append(v)
    		self.db.close()
 
 		web.header('Content-Type', 'application/json')
 		return json.dumps(self.mode)
-
 class SystemSetUpdata():
 	def __init__(self):
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		self.host_ip = conf.get("host", "ip")
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
 		self.render = web.template.render("view")
 	
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
 
-		return self.render.SystemSetUpdate()
-	
+		return self.render.SystemSetUpdate(self.host_ip)
 	def POST(self):
-		return self.render.SystemSetUp()
+		self.i = web.input()
 
+		sql = "UPDATE top SET "
+		sql += "account='" + self.i.account + "' Limit 1"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+
+		sql = "UPDATE top SET "
+		sql += "password='" + self.i.password + "' Limit 1"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+
+		self.db.close()
+
+		raise web.seeother('/SetUp')
+class SystemSetUpcard:
+	def __init__(self):
+		#Value definition
+		self.number = []
+		self.password = []
+		self.phone = []
+		self.email = []
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Template definition
+		self.render = web.template.render("view")
+	def GET(self):
+		render = web.template.render("view")
+		if session.logged_in == False:
+			raise web.seeother('/')
+
+		sql = "SELECT phone FROM member_information"
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+   		for row in data:
+   			self.number.append(row[0])
+   		self.db.close()
+
+		return render.SystemSetUpcard(self.number)
+	def POST(self):
+		self.i = web.input()
+		sql = "UPDATE member_information SET card = \'None\' WHERE phone=\'" + self.i.account + "\'"
+		print(sql)
+		self.cursor.execute(sql)
+		self.db.commit()
+		self.db.close()
+		raise web.seeother('/SetUp')
 
 if __name__ == '__main__':
+	host_ip = socket.gethostbyname(socket.getfqdn(socket.gethostname(  )))
+	#config
+	conf = ConfigParser.ConfigParser()
+	conf.read("test.conf")
+	
+	conf.set("host","ip",'http://' + host_ip + ':8000')
+	fh = open('test.conf' ,'w')
+	conf.write(fh)#把要修改的节点的内容写到文件中
+	fh.close()
+
 	app.run()

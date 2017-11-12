@@ -21,11 +21,8 @@ function CheckForm(){
         return true;
     else  
         return false;*/
-    var A = document.getElementById("A").value
-    var B = document.getElementById("B").value
-    var C = document.getElementById("C").value
     var D = document.getElementById("D").value
-    if(A == "" || B == "" || C == "" || D == ""){
+    if(D == ""){
         alert("不得為空值");
         return false;
     }
@@ -34,38 +31,6 @@ function CheckForm(){
             return true;
         else  
             return false;
-    }
-}
-function Function_A(){
-    var p = document.getElementById("A").value
-    if(p == ""){
-        alert("不得為空值");
-        document.getElementById("A").value = p;
-    }else if(p.length <6){
-        alert("密碼長度需大於6");
-        document.getElementById("A").value = "";
-    }
-}
-function Function_B(){
-    var p = document.getElementById("B").value
-    if(p == ""){
-        alert("不得為空值");
-        document.getElementById("B").value = p;
-    }else if(p.length <6){
-        alert("密碼長度需大於6");
-        document.getElementById("B").value = "";
-    }
-}
-function Function_C(){
-    var b = document.getElementById("B").value
-    var c = document.getElementById("C").value
-    if(c == ""){
-        alert("不得為空值");
-        document.getElementById("C").value = p;
-    }
-    if(b != c){
-        alert("密碼錯誤");
-        document.getElementById("C").value = "";
     }
 }
 function Function_D(){
@@ -92,80 +57,42 @@ function Function_E(){
 </head>
 <body class="output container">
 
-<!--title-->
-
-    <div class="special">
-
-            <br>
-            <br>
-            <br>
-            <br>
-
-    </div>
-
-<nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        
-        <div class="navbar-header">
-            <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+            </div>
         </div>
+    </nav>
+    <div class="signup-three">
 
-    </div>
-</nav>
-
-
-
-<div class="signup-three">
-
-    <div class="form-signup">
-        <!--環境監控-->
-
-        <form class="form-signup">         
-
+        <div class="form-signup from_w">
+            <!--環境監控-->
+            <form class="form-signup">         
                 <a class="list-group-item active">環境監控</a>
                 <a href="/CurrentState"     class="list-group-item">目前數值</a>
                 <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
                 <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
                 <br>
-             
-        </form>
-
-        <!--安全監控-->
-
-        <form class="form-signup">         
-
+            </form>
+            <form class="form-signup">         
                 <a class="list-group-item active">安全監控</a>
                 <a href="/DoorLock"         class="list-group-item">門鎖</a>
                 <a href="/Monitor"          class="list-group-item">監視器</a>
                 <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
                 <br>
-             
-        </form>
-
-
-        <!--系統設定-->
-
-        <form class="form-signup">         
-
+            </form>
+            <form class="form-signup">
                 <a class="list-group-item active">系統設定</a>
-                <a href="/Member/Quire" class="list-group-item">成員</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
                 <a href="/SetUp" class="list-group-item">設定</a>
                 <br>
-             
-        </form>
-
-        <form class="form-signup">        
-            
-            <a href="#" class="list-group-item">登出</a>
-                                
-        </form>
-
-        
+            </form>
+            <form class="form-signup">        
+                <a href="#" class="list-group-item">登出</a>              
+            </form>
+        </div>
     </div>
-
-</div>
-
 
 <div class="right">
         <!--新增-->
@@ -175,24 +102,6 @@ function Function_E(){
             </div>
             <div class="right_MemberAdd_t_b">
                 <form action="/Member/Add" method="POST" class="form-horizontal right_MemberAdd_form" onSubmit="return CheckForm();">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">帳號</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="account" class="form-control" placeholder="至少6字元" onblur="Function_A()" id="A">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">密碼</label>
-                        <div class="col-sm-10">
-                            <input type="password" name="password" class="form-control" placeholder="至少6字元" onblur="Function_B()" id="B">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">密碼確認</label>
-                        <div class="col-sm-10">
-                            <input type="password" class="form-control" placeholder="至少6字元" onblur="Function_C()" id="C">
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">手機</label>
                         <div class="col-sm-10">
@@ -209,7 +118,7 @@ function Function_E(){
                         <div class="col-sm-offset-2 col-sm-10">
                             <center>
                             <button type="submit" class="btn btn-default">確認</button>
-                            <a class="btn btn-default" href="/Member/Quire" role="button">返回</a>
+                            <a class="btn btn-default" href="/SetUp" role="button">返回</a>
                             </center>
                         </div>
                     </div>

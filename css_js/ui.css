@@ -2,7 +2,7 @@
 
 html, body {
 
-    background-image: url('http://127.0.0.1:8000/images');
+    background-image: url('http://192.168.1.227:8000/images');
     background-size: cover;
     font-family: 'Open Sans', sans-serif;
     background-attachment: fixed;
@@ -130,11 +130,13 @@ h5{
 
 .signup-three{
 
-    width:25%;
+    width:380px;
+    height: 100%;
     float:left;
-    margin-right:1%;
+    margin-right:0px;
+    margin-top: 80px;
     background:rgba(0, 0, 0, 0.28);
-    padding:2%;
+    padding:20px;
     box-shadow: 0 3px 18px 8px rgba(38, 24, 24, 0.25);
     text-align:center;
     position:relative;                                      /*past value table 的列表格式*/
@@ -374,14 +376,21 @@ h5{
 
 .right{
     height: 100%;
-    width: 100%;
-    padding-left: 280px;
+    /*width: 100%;*/
+    margin-left: 330px;
+    margin-top: 100px;
+    padding: 0px;
 }
 
 .right_two{
     height: 100%;
     width: 100%;
     padding-left: 350px;
+}
+.from_w{
+    width: 280px;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 /*-----------------------*/
 .text_title{

@@ -1,0 +1,117 @@
+/*System Report*/
+    /*1. Select report*/
+    .set_SR{
+        height: 290px;
+        width: 90%;
+        border-radius:1%;
+        background-color: #FFFFFF;
+        margin-top: 25px;
+        margin-left:50px;
+    }
+    .set_SR_t{
+        height: 40px;
+        width: 100%;
+        border-radius:1%;
+        background-color: #99BBFF;   
+    }
+    .set_SR_t_L{
+        height: 40px;
+        width: 500px;
+        float:left;
+        padding-top: 5px;
+        padding-left: 5px;
+    }
+    .set_SR_t_R{
+        height: 40px;
+        width: 200px;
+        float:right;
+        padding-top: 5px;
+    }
+    .metable{
+        width: 95%;
+    }
+
+    /*2. Daily report*/
+    .set_DR{
+        height: 200px;
+        width: 90%;
+        border-radius:1%;
+        background-color: #FFFFFF;
+        margin-top: 25px;
+        margin-left:50px;
+    }
+    .set_DR_t{
+        height: 40px;
+        width: 100%;
+        border-radius:1%;
+        background-color: #99BBFF;   
+    }
+    .set_DR_t_L{
+        height: 40px;
+        width: 500px;
+        float:left;
+        padding-top: 5px;
+        padding-left: 5px;
+    }
+    .set_DR_t_R{
+        height: 40px;
+        width: 200px;
+        float:right;
+        padding-top: 5px;
+    }
+    .set_DR_b{
+        height: 300px;
+        width: 100%;
+        padding-left: 150px;
+        padding-right: 150px;
+    }
+    .set_DR_form{
+        height: 100px;
+        width: 95%;
+        padding-top: 15px;
+        float:left; 
+    }
+/*----------------------------------------------*/
+
+
+
+.E_table{
+
+    height: 450px;
+    width: 90%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+    margin-top:26px;
+    margin-left:50px;
+
+}
+.E_table_t{
+    height: 40px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #99BBFF;
+    
+}
+.E_table_t_L{
+    height: 40px;
+    width: 800px;
+    float:left;
+    padding-top: 0px;
+    padding-left: 0px;
+}
+.E_table_t_R{
+    height: 40px;
+    width: 200px;
+    float:right;
+    padding-top: 5px;
+}
+.E_table_b{
+    height: 220px;
+    width: 100%;
+    border-radius:1%;
+    background-color: #FFFFFF;
+}
+.metable{
+    width: 95%;
+}
+/*-----------------------------*/

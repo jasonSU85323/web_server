@@ -1,3 +1,4 @@
+$def with(host_ip)
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,14 +13,174 @@
     <link rel="stylesheet" type="text/css" href="/sdl">
 	<title>居家物聯網監控系統</title>
 
+    <script language="javascript">
+        var alldata; //全域變數，存取收到的data
+        function ShowHello(){
+            var host_ip = document.getElementById("host_ip").value;
+            $$.post(
+                host_ip + '/DLAgent',
+                { 
+                    tt: "tt"  
+                },
+                function(data){
+                    alldata = data; //將data存入全域變數
+                    $$("#mt tbody").html(""); //清空表格
+                    var s = document.getElementById('Z');
+                    s.options.length = 0; //清空頁碼下拉選單
+
+                    count = Math.ceil(alldata.length/5) //取得總頁數
+                    for(i=1; i<=count; i++){ //新增頁碼
+                        var new_option = new Option(i,i*5-4)
+                        s.options.add(new_option);
+                    }
+
+                    for(i=0;i<5;i++){
+                        $$('#mt tbody').append(
+                            "<tr>"
+                                +"<td>"+Number(i+1)+"</td>"
+                                +"<td>"+String(alldata[i]["year"])+"/"+String(alldata[i]["month"])+"/"+String(alldata[i]["day"])+"</td>"
+                                +"<td>"+String(alldata[i]["hour"])+":"+String(alldata[i]["min"])+"</td>"
+                                +"<td>"+String(alldata[i]["w_card"])+"</td>"
+                                +"<td>"
+                                +     "<button type=\"button\" onclick=\"add_card(\'"+String(alldata[i]["w_card"])+"\')\">Yes</button>"
+                                +     "<button type=\"button\" onclick=\"del_card(\'"+String(alldata[i]["w_card"])+"\')\">No</button>"
+                                +"</td>"
+                            +"</tr>"
+                            );
+                    }
+                                        
+                }
+            );
+        }
+        function test() {
+            $$("#mt tbody").html(""); //清空表格
+            var s = document.getElementById('Z');
+            // alert(s.value)
+            for(i=Number(s.value); i<Number(s.value)+5; i++){
+                $$('#mt tbody').append(
+                    "<tr>"
+                        +"<td>"+Number(i)+"</td>"
+                        +"<td>"+String(alldata[i-1]["year"])+"/"+String(alldata[i-1]["month"])+"/"+String(alldata[i-1]["day"])+"</td>"
+                        +"<td>"+String(alldata[i-1]["hour"])+":"+String(alldata[i-1]["min"])+"</td>"
+                        +"<td>"+String(alldata[i-1]["w_card"])+"</td>"
+                        +"<td>"
+                        +     "<button type=\"button\" onclick=\"add_card(\'"+String(alldata[i-1]["w_card"])+"\')\">Yes</button>"
+                        +     "<button type=\"button\" onclick=\"del_card(\'"+String(alldata[i-1]["w_card"])+"\')\">No</button>"
+                        +"</td>"
+                    +"</tr>"
+                    );
+            }
+
+        }
+    </script> 
+
+    <script>
+        var alldata2; //全域變數，存取收到的data
+
+        function Qdata() {
+            var Y = document.getElementById("Y").value
+            var M = document.getElementById("M").value
+            var D = document.getElementById("D").value
+
+            var host_ip = document.getElementById("host_ip").value;
+            $$.post(
+                host_ip + '/DLRecord',
+                {
+                    Y: Y,
+                    M: M, 
+                    D: D
+                },
+                function(data){
+                    alldata2 = data; //將data存入全域變數
+                    $$("#mt2 tbody").html(""); //清空表格
+                    var s = document.getElementById('X');
+                    s.options.length = 0; //清空頁碼下拉選單
+
+                    count = Math.ceil(alldata2.length/10) //取得總頁數
+                    for(i=1; i<=count; i++){ //新增頁碼
+                        var new_option = new Option(i,i*10-9)
+                        s.options.add(new_option);
+                    }
+
+                    for(i=0;i<10;i++){
+                        $$('#mt2 tbody').append(
+                            "<tr>"
+                                +"<td>"+Number(i+1)+"</td>"
+                                +"<td>"+String(alldata2[i]["year"])+" / "+String(alldata2[i]["month"])+" / "+String(alldata2[i]["day"])+"</td>"
+                                +"<td>"+String(alldata2[i]["hour"])+":"+String(alldata2[i]["min"])+"</td>"
+                                +"<td>"+String(alldata2[i]["event"])+"</td>"
+                            +"</tr>"
+                            );
+                    }
+                                        
+                }
+            );    
+        }
+        function test1() {
+            $$("#mt2 tbody").html(""); //清空表格
+            var s = document.getElementById('X');
+            for(i=Number(s.value); i<Number(s.value)+10; i++){
+                $$('#mt2 tbody').append(
+                    "<tr>"
+                        +"<td>"+Number(i)+"</td>"
+                        +"<td>"+String(alldata2[i-1]["year"])+" / "+String(alldata2[i-1]["month"])+" / "+String(alldata2[i-1]["day"])+"</td>"
+                        +"<td>"+String(alldata2[i-1]["hour"])+":"+String(alldata2[i-1]["min"])+"</td>"
+                        +"<td>"+String(alldata2[i-1]["event"])+"</td>"
+                    +"</tr>"
+                    );
+            }
+            alert(alldata2[12]["year"])
+        }
+    </script> 
+
+    <script>
+        function add_card(card_id){
+            var host_ip = document.getElementById("host_ip").value;
+            var ppp = prompt('請輸入要登入的手機號碼' , '手機號碼');
+
+            if (ppp != null) {
+                if (confirm('再次確認是否註冊?')) {
+                    $$.post(
+                        host_ip + '/DLadd',
+                        {
+                            card_id: card_id,
+                            phone  : ppp
+                        },
+                        function(data){
+                            alert(data);
+                            window.location.reload("/DoorLock");//web_page-RE                               
+                        }
+                    );                   
+                }
+            }
+
+            
+            
+     
+        }
+
+        function del_card(card_id){
+            var host_ip = document.getElementById("host_ip").value;
+            if (confirm('再次確認是否刪除?')) {
+                $$.post(
+                    host_ip + '/DLdel',
+                    {
+                        card_id: card_id
+                    },
+                    function(data){
+                        alert(data);
+                        window.location.reload("/DoorLock");//web_page-RE                               
+                    }
+                );                   
+            }
+        }
+    </script>
 </head>
-<body class="output container">
-    <div class="special">
-        <br>
-        <br>
-        <br>
-        <br>
-    </div>
+</head>
+<body class="output container" onload="ShowHello()">
+    <input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
+    
+    
     <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -29,7 +190,7 @@
     </nav>
     <div class="signup-three">
 
-        <div class="form-signup">
+        <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
                 <a class="list-group-item active">環境監控</a>
@@ -56,6 +217,92 @@
             </form>
         </div>
     </div>
+
+    <!--右-->
+    <div class="right">        
+        <!--卡片代辦-->
+        <div class="set_SR">
+            <div class="set_SR_t">
+                <div class="text_1">卡片代辦</div>
+                <select style="width:70px;float:left;" class=" form-control input-sm" name="Z" id="Z"></select>
+                <button type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
+            </div>
+            <table id="mt" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>項次</th>
+                        <th>日期</th>
+                        <th>時間</th>
+                        <th>卡片編號</th>
+                        <th>辦理(Yes/No)</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <!--整合-->
+        <div class="E_table">
+            <div class="E_table_t">
+                <div class="E_table_t_L">
+                    <div class="text_1">刷卡紀錄</div>
+                    <!--// 下拉是選單(年/月/日)-->
+                    <form action="/EventRecord" method="POST">
+                        <select style="width:85px;float:left;" class=" form-control input-sm" name="Y" id="Y">
+                            <option value="2017">2017年</option>
+                            <option value="2018">2018年</option>
+                            <option value="2019">2019年</option>
+                            <option value="all">All</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="M" id="M">
+                            <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                            <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                            <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                            <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                            <option value="all">All</option>
+                        </select>
+                        <select style="width:70px;float:left;" class=" form-control input-sm" name="D" id="D">
+                            <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                            <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                            <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                            <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                            <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                            <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                            <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                            <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                            <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                            <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                            <option value="31">31日</option>
+                            <option value="all">All</option>
+                        </select>
+                        <button type="button" class="btn btn-default btn-sm" onclick="Qdata()">送出</button>
+                        
+                        <button style="width:70px;float:right;" type="button" class="btn btn-default btn-sm" onclick="test1()">查詢</button>
+                        <select style="width:70px;float:right;" class=" form-control input-sm" name="X" id="X"> <option value="#">頁數</option></select>
+                        
+                    </form>
+                </div>
+            </div>
+            <div class="E_table_b">
+                <table id="mt2" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>項次</th>
+                            <th>日期</th>
+                            <th>時間</th>
+                            <th>卡片編號</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 
 
 </body>

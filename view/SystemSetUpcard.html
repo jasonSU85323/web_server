@@ -19,52 +19,81 @@ $def with(account)
 </head>
 <body class="output container">
 
-    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
-            </div>
-        </div>
-    </nav>
-    <div class="signup-three">
+<!--title-->
 
-        <div class="form-signup from_w">
-            <!--環境監控-->
-            <form class="form-signup">         
+
+<nav class="navbar navbar-one navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        
+        <div class="navbar-header">
+            <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="signup-three">
+
+    <div class="form-signup from_w">
+        <!--環境監控-->
+
+        <form class="form-signup">         
+
                 <a class="list-group-item active">環境監控</a>
                 <a href="/CurrentState"     class="list-group-item">目前數值</a>
                 <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
                 <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
                 <br>
-            </form>
-            <form class="form-signup">         
+             
+        </form>
+
+
+        <!--安全監控-->
+
+        <form class="form-signup">         
+
                 <a class="list-group-item active">安全監控</a>
                 <a href="/DoorLock"         class="list-group-item">門鎖</a>
                 <a href="/Monitor"          class="list-group-item">監視器</a>
                 <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
                 <br>
-            </form>
-            <form class="form-signup">
+             
+        </form>
+
+        <!--系統設定-->
+
+        <form class="form-signup">         
+
                 <a class="list-group-item active">系統設定</a>
+                <a href="/Member/Quire" class="list-group-item">成員</a>
                 <a href="/SystemReportDay" class="list-group-item">報表</a>
                 <a href="/SetUp" class="list-group-item">設定</a>
                 <br>
-            </form>
-            <form class="form-signup">        
-                <a href="#" class="list-group-item">登出</a>              
-            </form>
-        </div>
+             
+        </form>
+
+
+        <form class="form-signup">        
+            
+            <a href="#" class="list-group-item">登出</a>
+                                
+        </form>
+
+        
     </div>
+
+</div>
 
 
 <div class="right">
         <!--刪除-->
         <div class="right_MemberDel">
             <div class="right_MemberDel_t">
-                <div class="text_1">刪除</div>
+                <div class="text_1">刪除卡片</div>
             </div>
             <div class="right_MemberAdd_t_b">
-                <form action="/Member/Delete" method="POST" class="form-horizontal right_MemberDel_form">
+                <form action="/SystemSetUpcard" method="POST" class="form-horizontal right_MemberDel_form">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇電話</label>
                         <div class="col-sm-10">

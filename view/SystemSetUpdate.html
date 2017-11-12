@@ -1,3 +1,4 @@
+$def with(host_ip)
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,16 +53,76 @@
                 document.getElementById("B").value = "";
             }
         }
-    </script>  
+    </script>
+
+    <script language="javascript">
+        var alldata; //全域變數，存取收到的data
+        function ShowHello(){
+            var host_ip = document.getElementById("host_ip").value;
+            //***求帳密***
+            // $$.post(
+            //     baseurl + '/SetUp',
+            //     { 
+            //         postdata: "UandP"
+            //     },
+            //     function(data){
+            //         document.getElementById('u').value = data.user;
+            //         document.getElementById('p').value = data.pass;                             
+            //     }
+            // );
+            //***求會員***
+            $$.post(
+                host_ip + '/SetUp',
+                { 
+                    postdata: "homedata"  
+                },
+                function(data){
+                    alldata = data; //將data存入全域變數
+                    $$("#mt tbody").html(""); //清空表格
+                    var s = document.getElementById('Z');
+                    s.options.length = 0; //清空頁碼下拉選單
+
+                    count = Math.ceil(alldata.length/5) //取得總頁數
+                    for(i=1; i<=count; i++){ //新增頁碼
+                        var new_option = new Option(i,i*5-4)
+                        s.options.add(new_option);
+                    }
+
+                    for(i=0;i<5;i++){
+                        $$('#mt tbody').append(
+                            "<tr>"
+                                +"<td>"+Number(i+1)+"</td>"
+                                +"<td>"+String(data[i]["phone"])+"</td>"
+                                +"<td>"+String(data[i]["email"])+"</td>"
+                                +"<td>"+String(data[i]["card"])+"</td>"
+                            +"</tr>"
+                            );
+                    }
+                                        
+                }
+            );
+        }
+        function test() {
+            $$("#mt tbody").html(""); //清空表格
+            var s = document.getElementById('Z');
+            for(i=Number(s.value); i<Number(s.value)+5; i++){
+                $$('#mt tbody').append(
+                    "<tr>"
+                        +"<td>"+Number(i)+"</td>"
+                        +"<td>"+String(alldata[i-1]["phone"])+"</td>"
+                        +"<td>"+String(alldata[i-1]["email"])+"</td>"
+                        +"<td>"+String(alldata[i-1]["card"])+"</td>"
+                    +"</tr>"
+                    );
+            }
+            // alert(alldata.length)
+        }
+    </script> 
 
 </head>
-<body class="output container">
-    <div class="special">
-        <br>
-        <br>
-        <br>
-        <br>
-    </div>
+<body class="output container" onload="ShowHello()">
+    <input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
+
     <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -71,7 +132,7 @@
     </nav>
     <div class="signup-three">
 
-        <div class="form-signup">
+        <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
                 <a class="list-group-item active">環境監控</a>
@@ -106,19 +167,19 @@
             <div class="set_DR_t">
                 <div class="text_1">登入帳密</div>
             </div>
-            <form class="form-horizontal set_DR_form">
+            <form action="/SetUpdata" method="POST" class="form-horizontal set_DR_form">
                 <form action="/SetUpdata" method="POST" class="form-horizontal setR_form" onSubmit="return CheckForm();">
                     <!--帳號-->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">帳號：</label>
                         <div class="col-sm-8">
-                            <input class="form-control" type="text" onblur="Function_A()" id="A"></div>
+                            <input class="form-control" name="account" type="text" onblur="Function_A()" id="A"></div>
                     </div>
                     <!--密碼-->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">密碼：</label>
                         <div class="col-sm-8">
-                            <input class="form-control" type="text" onblur="Function_B()" id="B"></div>
+                            <input class="form-control" name="password" type="text" onblur="Function_B()" id="B"></div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
@@ -133,14 +194,20 @@
         <div class="set_SR">
             <div class="set_SR_t">
                 <div class="text_1">通知人員</div>
+                <select style="width:70px;float:left;" class=" form-control input-sm" name="Z" id="Z"></select>
+                <button type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
+                <a type="button" href="/Member/Add" class="btn btn-default btn-sm">新增</a>
+                <a type="button" href="/Member/Modify" class="btn btn-default btn-sm">修改</a>
+                <a type="button" href="/Member/Delete" class="btn btn-default btn-sm">刪除</a>
+                <a type="button" href="/SystemSetUpcard" class="btn btn-default btn-sm">刪除卡片</a>
             </div>
             <table id="mt" class="table table-hover">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>項次</th>
-                        <th>電子郵件</th>
                         <th>電話</th>
+                        <th>電子郵件</th>
+                        <th>登入卡片</th>
                     </tr>
                 </thead>
                 <tbody>
