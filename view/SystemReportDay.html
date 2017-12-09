@@ -27,39 +27,40 @@ function ShowView(){
 </head>
 <body class="output container" onload="return ShowView()">
 
-    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin: 0px">
+        <div class="container">
             <div class="navbar-header">
-                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+                <a class="text_title navbar-brand" href="/CurrentState">家庭物聯網監控系統</a>
             </div>
         </div>
     </nav>
+    
     <div class="signup-three">
 
         <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
-                <a class="list-group-item active">環境監控</a>
-                <a href="/CurrentState"     class="list-group-item">目前數值</a>
-                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
-                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+                <a class="txt_LeftTitle_T list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="txt_LeftTitle_B list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="txt_LeftTitle_B list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="txt_LeftTitle_B list-group-item">過去數值(圖)</a>
                 <br>
             </form>
             <form class="form-signup">         
-                <a class="list-group-item active">安全監控</a>
-                <a href="/DoorLock"         class="list-group-item">門鎖</a>
-                <a href="/Monitor"          class="list-group-item">監視器</a>
-                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+                <a class="txt_LeftTitle_T list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="txt_LeftTitle_B list-group-item">卡片處理</a>
+                <a href="/Monitor"          class="txt_LeftTitle_B list-group-item">監視影像</a>
+                <a href="/EventRecord"      class="txt_LeftTitle_B list-group-item">事件紀錄</a>
                 <br>
             </form>
             <form class="form-signup">
-                <a class="list-group-item active">系統設定</a>
-                <a href="/SystemReportDay" class="list-group-item">報表</a>
-                <a href="/SetUp" class="list-group-item">設定</a>
+                <a class="txt_LeftTitle_T list-group-item active">系統設定</a>
+                <a href="/SystemReportDay" class="txt_LeftTitle_B list-group-item">報表生成</a>
+                <a href="/SetUp"           class="txt_LeftTitle_B list-group-item">成員處理</a>
                 <br>
             </form>
             <form class="form-signup">        
-                <a href="#" class="list-group-item">登出</a>              
+                <a href="/logout" class="list-group-item">登出</a>              
             </form>
         </div>
     </div>
@@ -67,7 +68,17 @@ function ShowView(){
 
 
 
-<div class="right">
+    <div class="right">
+        <div class="page-header">
+            <div class="T_top_max">
+                報表生成
+            </div>
+            <div class="T_top_min">
+                <a href="/CurrentState">物聯網監控系統(首頁)</a>
+                /
+                <a href="/SystemReportDay">日報表</a>
+            </div>
+        </div>
         <!--選擇生成報表-->
         <div class="SR">
             <div class="SR_t">
@@ -79,16 +90,17 @@ function ShowView(){
                          <span id='table_page1'></span>
                     </div>
 
-                </div>
+            </div>
 
-
+            <div class="v_txt SR_b">
                 <br>
                 <center>
-                    <a class="btn btn-default" href="/SystemReportDay" role="button">日報表</a>
-                    <a class="btn btn-default" href="/SystemReportWeek" role="button">周報表</a>
-                    <a class="btn btn-default" href="/SystemReportMonth" role="button">月報表</a>
+                    <a class="input_button btn btn-default" href="/SystemReportDay" role="button">日報表</a>
+                    <a class="input_button btn btn-default" href="/SystemReportWeek" role="button">周報表</a>
+                    <a class="input_button btn btn-default" href="/SystemReportMonth" role="button">月報表</a>
                 </center> 
             </div>
+        </div>
 
 
 
@@ -98,7 +110,7 @@ function ShowView(){
                 <div class="text_1">日報表</div>
             </div>
             <div class="DR_b">
-                <form action="/SystemReportDay" method="POST" class="form-horizontal DR_form">
+                <form action="/SystemReportDay" method="POST" class="v_txt form-horizontal DR_form">
                     <!--隱藏內容-->
                     <input type="hidden" value="$path" name="pubkeye" id="path"/>
                     <input type="hidden" value="$log"  name="pubkeyn" id="log" />
@@ -106,7 +118,7 @@ function ShowView(){
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇年</label>
                         <div class="col-sm-10">
-                            <select name="Y" class="form-control">
+                            <select name="Y" class="input_valve form-control">
                                 <option value="2017">2017年</option>
                                 <option value="2018">2018年</option>
                                 <option value="2019">2019年</option>
@@ -118,7 +130,7 @@ function ShowView(){
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇月</label>
                         <div class="col-sm-10">
-                            <select name="M" class="form-control">
+                            <select name="M" class="input_valve form-control">
                                 <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
                                 <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
                                 <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
@@ -131,7 +143,7 @@ function ShowView(){
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇日</label>
                         <div class="col-sm-10">
-                            <select name="D" class="form-control">
+                            <select name="D" class="input_valve form-control">
                                 <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
                                 <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
                                 <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
@@ -179,9 +191,9 @@ function ShowView(){
                     <div class="form-group">
                         <label class="col-sm-2 control-label"></label>
                         <div class="col-sm-10">
-                            <button type="submit" class="btn btn-default">確認</button>
+                            <button type="submit" class="input_button btn btn-default">確認</button>
                             <div id="d1" style="display: none; float: right;">
-                                <button type="button" class="btn btn-default" onclick="location.href = '$path';">
+                                <button type="button" class="input_button btn btn-default" onclick="location.href = '$path';">
                                     下載
                                 </button>
                             </div>

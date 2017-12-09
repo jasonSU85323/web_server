@@ -1,39 +1,25 @@
-/*Safety Event Record*/
-.right_Event{
-    height: 540px;
-    width: 99%;
-    border-radius:1%;
-    background-color: #FFFFFF;
-    margin-top: 10px;
-}
-.right_Event_t{
-    height: 40px;
-    width: 100%;
-    border-radius:1%;
-    background-color: #99BBFF;
+.avis{
+
+
+    font-weight: bold;
+    height: 300px;
+    width: 950px;
+    margin-left: 50px;
+    background-color: #000000;
+    font-family:微軟正黑體;
+    font-size: 15px;
     
-}
-.right_Event_t_L{
-    height: 40px;
-    width: 300px;
-    float:right;
-    padding-top: 5px;
-}
-.right_Event_t_R{
-    height: 40px;
-    width: 200px;
-    float:right;
-    padding-top: 5px;
 }
 
 
 
 .E_table{
+
     height: 450px;
     width: 90%;
     border-radius:1%;
     background-color: #AAAAAA;
-    margin-top:26px;
+    margin-top:0px;
     margin-left:50px;
 
 }
@@ -48,8 +34,8 @@
     height: 40px;
     width: 800px;
     float:left;
-    padding-top: 0px;
-    padding-left: 0px;
+    padding-top: 5px;
+    padding-left: 5px;
 }
 .E_table_t_R{
     height: 40px;
@@ -69,13 +55,11 @@
 /*-----------------------------*/
 
 .input_valve{
-    margin-top: 5px;
     margin-left: 5px;
     background-color: #C0C0C0;
     border-color: #C0C0C0;
 }
 .input_button{
-    margin-top: 5px;
     margin-left: 10px;
     background-color: #696969;
     border-color: #696969;

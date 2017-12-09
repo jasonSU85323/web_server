@@ -81,39 +81,40 @@ $def with(host_ip)
 <body class="output container" onload="ShowHello()">
     <input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
 
-    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin: 0px">
+        <div class="container">
             <div class="navbar-header">
-                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+                <a class="text_title navbar-brand" href="/CurrentState">家庭物聯網監控系統</a>
             </div>
         </div>
     </nav>
+    
     <div class="signup-three">
 
         <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
-                <a class="list-group-item active">環境監控</a>
-                <a href="/CurrentState"     class="list-group-item">目前數值</a>
-                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
-                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+                <a class="txt_LeftTitle_T list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="txt_LeftTitle_B list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="txt_LeftTitle_B list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="txt_LeftTitle_B list-group-item">過去數值(圖)</a>
                 <br>
             </form>
             <form class="form-signup">         
-                <a class="list-group-item active">安全監控</a>
-                <a href="/DoorLock"         class="list-group-item">門鎖</a>
-                <a href="/Monitor"          class="list-group-item">監視器</a>
-                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+                <a class="txt_LeftTitle_T list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="txt_LeftTitle_B list-group-item">卡片處理</a>
+                <a href="/Monitor"          class="txt_LeftTitle_B list-group-item">監視影像</a>
+                <a href="/EventRecord"      class="txt_LeftTitle_B list-group-item">事件紀錄</a>
                 <br>
             </form>
             <form class="form-signup">
-                <a class="list-group-item active">系統設定</a>
-                <a href="/SystemReportDay" class="list-group-item">報表</a>
-                <a href="/SetUp" class="list-group-item">設定</a>
+                <a class="txt_LeftTitle_T list-group-item active">系統設定</a>
+                <a href="/SystemReportDay" class="txt_LeftTitle_B list-group-item">報表生成</a>
+                <a href="/SetUp"           class="txt_LeftTitle_B list-group-item">成員處理</a>
                 <br>
             </form>
             <form class="form-signup">        
-                <a href="#" class="list-group-item">登出</a>              
+                <a href="/logout" class="list-group-item">登出</a>              
             </form>
         </div>
     </div>
@@ -121,60 +122,73 @@ $def with(host_ip)
 
 
     <div class="right">
+        <div class="page-header">
+            <div class="T_top_max">
+                成員處理
+            </div>
+            <div class="T_top_min">
+                <a href="/CurrentState">物聯網監控系統(首頁)</a>
+                /
+                <a href="/SetUp">成員處理</a>
+            </div>
+        </div>
         <!--登入帳密-->
         <div class="set_DR">
             <div class="set_DR_t">
                 <div class="text_1">登入帳密</div>
             </div>
-            <form class="form-horizontal set_DR_form">
-                <form action="/SetUpdata" method="POST" class="form-horizontal setR_form" onSubmit="return CheckForm();">
-                    <!--帳號：-->
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">帳號：</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="text" id="u" readonly></div>
-                    </div>
-                    <!--密碼：-->
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">密碼：</label>
-                        <div class="col-sm-8">
-                            <input class="form-control" type="text" id="p" readonly></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <a class="btn btn-default" href="/SetUpdata" role="button">修改</a>
+            <div class="set_DR_b">
+                <form class="form-horizontal set_DR_form t_txt">
+                    <form action="/SetUpdata" method="POST" class="form-horizontal setR_form" onSubmit="return CheckForm();">
+                        <!--帳號：-->
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">帳號：</label>
+                            <div class="col-sm-8">
+                                <input class="input_valve form-control" type="text" id="u" readonly></div>
                         </div>
-                    </div>
+                        <!--密碼：-->
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">密碼：</label>
+                            <div class="col-sm-8">
+                                <input class="input_valve form-control" type="text" id="p" readonly></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <a class="input_button btn btn-default" href="/SetUpdata" role="button">修改</a>
+                            </div>
+                        </div>
+                    </form>
                 </form>
-            </form>
-
+            </div>
 
         </div>
         
         <!--通知人員-->
-        <div class="set_SR">
+        <div class="set_SR t_txt">
             <div class="set_SR_t">
                 <div class="text_1">通知人員</div>
-                <select style="width:70px;float:left;" class=" form-control input-sm" name="Z" id="Z"></select>
-                <button type="button" class="btn btn-default btn-sm" onclick="test()">查詢</button>
-                <a type="button" href="/Member/Add" class="btn btn-default btn-sm">新增</a>
-                <a type="button" href="/Member/Modify" class="btn btn-default btn-sm">修改</a>
-                <a type="button" href="/Member/Delete" class="btn btn-default btn-sm">刪除</a>
-                <a type="button" href="/SystemSetUpcard" class="btn btn-default btn-sm">刪除卡片</a>
+                <select style="width:70px;float:left;" class="input_valve form-control input-sm" name="Z" id="Z"></select>
+                <button type="button" class="input_button btn btn-default btn-sm" onclick="test()">查詢</button>
+                <a type="button" href="/Member/Add" class="input_button btn btn-default btn-sm">新增</a>
+                <a type="button" href="/Member/Modify" class="input_button btn btn-default btn-sm">修改</a>
+                <a type="button" href="/Member/Delete" class="input_button btn btn-default btn-sm">刪除人員</a>
+                <a type="button" href="/SystemSetUpcard" class="input_button btn btn-default btn-sm">刪除卡片</a>
             </div>
-            <table id="mt" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>項次</th>
-                        <th>電話</th>
-                        <th>電子郵件</th>
-                        <th>登入卡片</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="set_SR_b">
+                <table id="mt" class="table table-hover">
+                    <thead>
+                     <tr>
+                            <th width="100px">項次</th>
+                            <th width="250px">電話</th>
+                            <th width="250px">電子郵件</th>
+                            <th>登入卡片</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>

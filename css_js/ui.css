@@ -2,20 +2,41 @@
 
 html, body {
 
-    background-image: url('http://192.168.1.227:8000/images');
-    background-size: cover;
+    /*background-image: url('http://192.168.1.227:8000/images');*/
+/*    background-size: cover;
     font-family: 'Open Sans', sans-serif;
     background-attachment: fixed;
-    background-position: center;
-    background-position: center;
-            
+    background-position: center;*/
+    background-color:#AAAAAA;
+    height: 100%;
+/*    width: 100%;
+    margin: 0;
+    padding: 0;
+    position:relative;*/
+/*    position:absolute;
+    top:0;
+    bottom:0;*/
+}
+
+.id_wrapper {
+    /* 設定高度最小為100%, 如果內容區塊很多, 可以長大 */
+    min-height: 100%;
+    /* 位置設為relative, 作為footer區塊位置的參考 */
+    position: relative;
+}
+.id_footer {
+    /* 設定footer的高度 */
+    height: 40px;
+    box-sizing: border-box;
+    /* 設定footer絕對位置在底部 */
+    position: absolute;
+    bottom: 0;
+    /* 展開footer寬度 */
+    width: 100%;
 }
 
 
-
-
 h1{
-
     color:#FFFFFF;
     font-size:100px;
     margin:60px 0;
@@ -53,13 +74,11 @@ h5{
 }
 
 .list-group-item{
-
-
     position: relative;
     display: block;
     margin-bottom: -1px;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #888888;
+    border: 1px solid #888888;
     text-align:center;
 }
 
@@ -99,7 +118,7 @@ h5{
 
 
 .container{
-    width:90%;
+    width:100%;
     margin:0 auto;
 }
 
@@ -129,20 +148,37 @@ h5{
 
 
 .signup-three{
-
-    width:380px;
-    height: 100%;
+    width:280px;
+    /*height: 160%;*/
     float:left;
-    margin-right:0px;
-    margin-top: 80px;
-    background:rgba(0, 0, 0, 0.28);
-    padding:20px;
-    box-shadow: 0 3px 18px 8px rgba(38, 24, 24, 0.25);
+    margin-top:50px;
+    padding:0px;
+    /*background:rgba(0, 0, 0, 0.28);*/
+    /*padding:20px;*/
+    /*box-shadow: 0 3px 18px 8px rgba(38, 24, 24, 0.25);*/
     text-align:center;
     position:relative;                                      /*past value table 的列表格式*/
-
+    background-color: #444444;
+    position:absolute;
+    top:0;
+    bottom:0;
 }
-
+signup-three{
+    width:280px;
+    /*height: 160%;*/
+    float:left;
+    margin-top:50px;
+    padding:0px;
+    /*background:rgba(0, 0, 0, 0.28);*/
+    /*padding:20px;*/
+    /*box-shadow: 0 3px 18px 8px rgba(38, 24, 24, 0.25);*/
+    text-align:center;
+    position:relative;                                      /*past value table 的列表格式*/
+    background-color: #444444;
+    position:absolute;
+    top:0;
+    bottom:0;
+}
 
 
 
@@ -195,12 +231,8 @@ h5{
 }
 
 .signinn{
-
         margin:10%;
-
 }
-
-
 
 .returninfo{
 
@@ -266,6 +298,13 @@ h5{
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     color: #FFFFFF;
     background-color: transparent;
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #666666;
+    border-color: #666666;
 }
 
 /*===================================================*/
@@ -346,8 +385,7 @@ h5{
     height: 100%;
     width: 100%;
     margin: 0;
-    padding-left: 0px;
-    padding-right: 0px;
+    padding: 0px;
  }
 .title{
     height: 50px;
@@ -375,11 +413,15 @@ h5{
 }
 
 .right{
-    height: 100%;
     /*width: 100%;*/
-    margin-left: 330px;
-    margin-top: 100px;
+    height: 110%;
+    margin-left: 280px;
+    margin-top: 0px;
     padding: 0px;
+    background-color: #AAAAAA;
+    position:absolute;
+    top:0;
+    bottom:0;
 }
 
 .right_two{
@@ -389,20 +431,74 @@ h5{
 }
 .from_w{
     width: 280px;
-    margin-left: 30px;
-    margin-right: 30px;
+    padding: 0px;
+    margin: 0px;
+/*    margin-left: 30px;
+    margin-right: 30px;*/
 }
+.f_out{
+    border-color: #666666;
+}
+.f_b{
+    background-color: #666666;
+}
+
+
 /*-----------------------*/
 .text_title{
     font-family:微軟正黑體;
-    font-size: 38px;
+    font-size: 30px;
 }
 .text_1{
     height: 40px;
     width: 200px;
     float:left; 
+    font-weight: bold;
     font-family:微軟正黑體;
     font-size: 30px;
-    color: #5555FF;
+    color: #444444;
     margin-left:20px;
+}
+.txt_LeftTitle_T{
+    font-family:微軟正黑體;
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing:5px;
+}
+.txt_LeftTitle_B{
+    font-family:微軟正黑體;
+    font-size: 14px;
+}
+
+.page-header {
+    width: 960px;
+    height: 60px;
+    padding-bottom: 9px;
+    margin: 40px 50px 20px;
+    border-bottom: 1px solid #eee;
+
+}
+.T_top_max{
+    height: 40px;
+    width: 150px;
+    float:left; 
+    font-weight: bold;
+    font-family:微軟正黑體;
+    font-size: 35px;
+    color: #444444;
+    margin-left:0px;
+    margin-top: 15px;
+    text-align:left;
+}
+.T_top_min{
+    height: 40px;
+    width: 500px;
+    float:left; 
+    font-weight: bold;
+    font-family:微軟正黑體;
+    font-size: 15px;
+    color: #444444;
+    margin-left:0px;
+    margin-top: 39px;
+    text-align:left;
 }

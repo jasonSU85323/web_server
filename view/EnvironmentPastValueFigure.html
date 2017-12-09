@@ -1,3 +1,4 @@
+$def with(host_ip)
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,15 +11,149 @@
 
     <link rel="stylesheet" type="text/css" href="/ui">
     <link rel="stylesheet" type="text/css" href="/epvf">
+
 	<title>居家物聯網監控系統</title>
 
-</head>
-<body class="output container">
+    <!--¤Þ¥Îjqueryªºjs-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!--¤Þ¥Îhighchartªºjs-->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!--¤Þ¥Îhighchart modulesªºjs-->
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+   
 
-    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+<script>
+        var alldata; //全域變數，存取收到的data
+
+        function Qdata() 
+        {
+
+
+            var index_name = document.getElementById("index_name").value
+
+            var theme = " "
+
+            if(index_name == 'Humidity')
+            {
+                var theme = "Humidity"
+            }
+            if(index_name == 'TemperC')
+            {
+                var theme = "Temperature"
+            }
+            if(index_name == 'TemperF')
+            {
+                var theme = "Fahrenheit"
+            }
+            if(index_name == 'sensor')
+            {
+                var theme = "Gas concentration"
+            }
+            if(index_name == 'Dust')
+            {
+                var theme = "PM2.5"
+            }
+            if(index_name == 'Air')
+            {
+                var theme = "Air"
+            }
+            if(index_name == 'ampere')
+            {
+                var theme = "Ampere"
+            }
+
+            var Y = document.getElementById("Y").value
+            var M = document.getElementById("M").value
+            var D = document.getElementById("D").value
+
+            var host_ip = document.getElementById("host_ip").value;
+            var arr = []
+
+            
+
+            $$.post(
+                host_ip + '/PastValueFigure',
+                {   index_name: index_name,
+                    Y: Y,
+                    M: M, 
+                    D: D
+                },
+
+                function(data)
+                {
+
+                    for(i=0;i<data.length;i++)
+                    {
+                       
+                        arr.push(data[i]["V"])
+                    }    
+
+
+
+                    $$(function(){
+                        //¨Ï¥Îhightchart
+                        Highcharts.chart(
+                        //Åã¥Üªºª«¥óID
+                                'container', {
+                                
+                                                chart: { type: 'line'},
+                                        
+                                                title: {text: theme},
+                                        
+                                                subtitle: { text: '' },
+                                        
+                                                xAxis: { categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00','12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00']
+                                                       },
+                                                yAxis: {title: {text: 'Value'}},
+                                                plotOptions: {line: {dataLabels: {enabled: true},enableMouseTracking: false}},
+
+                                                series: [
+                                                            {
+                                                                name: 'Time',
+
+                                                                data: [arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6],arr[7],arr[8],arr[9],arr[10],arr[11],arr[12],arr[13],arr[14],arr[15],arr[16],arr[17],arr[18],arr[19],arr[20],arr[21],arr[22],arr[23]]
+
+                                                            }, 
+
+                                                        ]
+
+                                             }
+
+                                        );
+
+
+                                    })            
+
+
+                }
+
+
+            );   
+
+        }
+       
+
+
+</script> 
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<input type="hidden" value="$host_ip" name="host_ip" id="host_ip"/>
+<body class="output container">
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin: 0px">
+        <div class="container">
             <div class="navbar-header">
-                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+                <a class="text_title navbar-brand" href="/CurrentState">家庭物聯網監控系統</a>
             </div>
         </div>
     </nav>
@@ -27,30 +162,109 @@
         <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
-                <a class="list-group-item active">環境監控</a>
-                <a href="/CurrentState"     class="list-group-item">目前數值</a>
-                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
-                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+                <a class="txt_LeftTitle_T list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="txt_LeftTitle_B list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="txt_LeftTitle_B list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="txt_LeftTitle_B list-group-item">過去數值(圖)</a>
                 <br>
             </form>
             <form class="form-signup">         
-                <a class="list-group-item active">安全監控</a>
-                <a href="/DoorLock"         class="list-group-item">門鎖</a>
-                <a href="/Monitor"          class="list-group-item">監視器</a>
-                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+                <a class="txt_LeftTitle_T list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="txt_LeftTitle_B list-group-item">卡片處理</a>
+                <a href="/Monitor"          class="txt_LeftTitle_B list-group-item">監視影像</a>
+                <a href="/EventRecord"      class="txt_LeftTitle_B list-group-item">事件紀錄</a>
                 <br>
             </form>
             <form class="form-signup">
-                <a class="list-group-item active">系統設定</a>
-                <a href="/SystemReportDay" class="list-group-item">報表</a>
-                <a href="/SetUp" class="list-group-item">設定</a>
+                <a class="txt_LeftTitle_T list-group-item active">系統設定</a>
+                <a href="/SystemReportDay" class="txt_LeftTitle_B list-group-item">報表生成</a>
+                <a href="/SetUp"           class="txt_LeftTitle_B list-group-item">成員處理</a>
                 <br>
             </form>
             <form class="form-signup">        
-                <a href="#" class="list-group-item">登出</a>              
+                <a href="/logout" class="list-group-item">登出</a>              
             </form>
         </div>
     </div>
+
+
+
+    <div class="right">
+
+
+         <div class="page-header">
+            <div class="T_top_max">
+                過去數值
+            </div>
+            <div class="T_top_min">
+                <a href="/CurrentState">物聯網監控系統(首頁)</a>
+                
+                <a href="/PastValueTable">過去數值</a>
+            </div>
+        </div>
+
+
+        
+
+   
+         <div class="E_table">
+            <div class="E_table_t">
+                <div class="E_table_t_L">
+                    <!--// 下拉是選單(年/月/日)-->
+                    <form action="/EventRecord" method="POST" class="t_txt" >
+                        <select style="width:150px;float:left;" class="input_valve form-control input-sm" name="index_name" id="index_name">
+                            <option value="Humidity">   1.濕度</option>
+                            <option value="TemperC">    2.溫度(攝氏)</option>
+                            <option value="TemperF">    3.溫度(華視)</option>
+                            <option value="sensor">     4.可燃氣</option>
+                            <option value="Air">        5.空氣清晰度</option>
+                            <option value="Dust">       6.粉成濃度</option>
+                            <option value="ampere">     7.安培量</option>
+                        </select>
+                        <select style="width:85px;float:left;" class="input_valve form-control input-sm" name="Y" id="Y">
+                            <option value="2017">2017年</option>
+                            <option value="2018">2018年</option>
+                            <option value="2019">2019年</option>
+                            <option value="all">All</option>
+                        </select>
+                        <select style="width:70px;float:left;" class="input_valve form-control input-sm" name="M" id="M">
+                            <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                            <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                            <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                            <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                            <option value="all">All</option>
+                        </select>
+                        <select style="width:70px;float:left;" class="input_valve form-control input-sm" name="D" id="D">
+                            <option value="1">1日</option><option value="2">2日</option><option value="3">3日</option>
+                            <option value="4">4日</option><option value="5">5日</option><option value="6">6日</option>
+                            <option value="7">7日</option><option value="8">8日</option><option value="9">9日</option>
+                            <option value="10">10日</option><option value="11">11日</option><option value="12">12日</option>
+                            <option value="13">13日</option><option value="14">14日</option><option value="15">15日</option>
+                            <option value="16">16日</option><option value="17">17日</option><option value="18">18日</option>
+                            <option value="19">19日</option><option value="20">20日</option><option value="21">21日</option>
+                            <option value="22">22日</option><option value="23">23日</option><option value="24">24日</option>
+                            <option value="25">25日</option><option value="26">26日</option><option value="27">27日</option>
+                            <option value="28">28日</option><option value="29">29日</option><option value="30">30日</option>
+                            <option value="31">31日</option>
+                            <option value="all">All</option>
+                        </select>
+                        <button type="button" class="input_button btn btn-default btn-sm" onclick="Qdata()">送出</button>
+                        
+                    </form>
+                </div>
+            </div>
+            <div class="E_table_b t_txt">
+                
+                <div id="container" style="min-width: 300px; height: 400px; margin: 0 auto"></div>
+
+            </div>
+        </div>
+        
+
+
+
+    </div>
+
 
 
 </body>

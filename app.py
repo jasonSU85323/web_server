@@ -9,6 +9,14 @@ import xlwt
 import ConfigParser
 import socket
 import random
+import platform
+
+try:
+	import fcntl
+except :
+	pass
+
+import struct
 #import js2py
 
 from web.wsgiserver import CherryPyWSGIServer
@@ -57,6 +65,7 @@ urls = (
 	'/DLdel','DLdel',
 
 	'/Monitor'			,'SafetyMonitor',						# Camera
+	'/Monitor_two'		,'SafetyMonitor_two',
 	
 	'/EventRecord'		,'SafetyEventRecord',					# Event record
 	'/EventRecord_E'	,'Event_E',
@@ -490,12 +499,54 @@ class EPtest:
    	
 class EnvironmentPastValueFigure:
 	def __init__(self):
+		#Value definition
+		self.mode = []		
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		IPAddress 		= conf.get("MySQL Database", "IP address"		)
+		AccountNumber 	= conf.get("MySQL Database", "account number"	)
+		Password 		= conf.get("MySQL Database", "password"			)
+		DataSheet 		= conf.get("MySQL Database", "Data sheet"		)
+		
+		self.db = MySQLdb.connect(IPAddress,AccountNumber,Password,DataSheet,charset="utf8")
+		self.cursor = self.db.cursor()
+		#Databse definition
+		conf = ConfigParser.ConfigParser()
+		conf.read("test.conf")
+		self.host_ip = conf.get("host", "ip")
+
+		#Template definition
 		self.render = web.template.render("view")
 	def GET(self):
 		if session.logged_in == False:
 			raise web.seeother('/')
-		return self.render.EnvironmentPastValueFigure()
+		return self.render.EnvironmentPastValueFigure(self.host_ip)
+	def POST(self):
+		i = web.input()
+		
+		dbname	= i.index_name
+		dby		= i.Y
+		dbm 	= i.M
+		dbd 	= i.D
 
+		sql = "SELECT year, month, day, hour, " + dbname + " FROM monitoring_value WHERE year = \'" +dby+"\'"
+		if dbm not in "all":
+			sql += " AND month = \'" + dbm + "\'"
+		if dbd not in "all":
+			sql += " AND day = \'"   + dbd + "\'"		
+		print(sql)
+
+		self.cursor.execute(sql)
+		data = self.cursor.fetchall()
+
+   		for row in data:
+   			v = {'year':int(row[0]), 'month':int(row[1]), 'day':int(row[2]), 'hour':int(row[3]), 'V':int(row[4])}
+   			self.mode.append(v)
+   		self.db.close()
+
+		web.header('Content-Type', 'application/json')
+		return json.dumps(self.mode)
 #---------------------------------------------------------------------------testClass
 class EnvironmentCurrentState_testClass:		
 	def __init__(self):
@@ -530,11 +581,11 @@ class value_testClass:
 		self.render = web.template.render("view")
 	
 	def GET(self):
-		value = {	'Humidity'	:self.TemperC,
-					'TemperC'	:self.TemperF,
-					'TemperF'	:self.sensor,
-					'sensor'	:self.Air,
-					'Air'		:self.Dust,
+		value = {	'Humidity'	:self.humidity,
+					'TemperC'	:self.TemperC,
+					'TemperF'	:self.TemperF,
+					'sensor'	:self.sensor,
+					'Air'		:self.Air,
 					'Dust'		:self.Dust,
 					'ampere'	:self.ampere
 				}
@@ -658,7 +709,13 @@ class DLAgent:
 		data = self.cursor.fetchall()
 
    		for row in data:
-   			v = {'year':int(row[0]), 'month':int(row[1]), 'day':int(row[2]), 'hour':int(row[3]), 'min':int(row[4]), 'w_card':str(row[5])}
+   			print(row[0])
+   			print(row[1])
+   			print(row[2])
+   			print(row[3])
+   			print(row[4])
+   			print(row[5])
+   			v = {'year':int(row[0]), 'month':str(row[1]), 'day':int(row[2]), 'hour':int(row[3]), 'min':int(row[4]), 'w_card':str(row[5])}
    			self.mode.append(v)
    		self.db.close()
 
@@ -778,6 +835,13 @@ class SafetyMonitor:
 		if session.logged_in == False:
 			raise web.seeother('/')
 		return self.render.SafetyMonitor()
+class SafetyMonitor_two:
+	def __init__(self):
+		self.render = web.template.render("view")
+	def GET(self):
+		if session.logged_in == False:
+			raise web.seeother('/')
+		return self.render.SafetyMonitor_two()
 
 class SafetyEventRecord:
 	def __init__(self):
@@ -1515,14 +1579,40 @@ class SystemSetUpcard:
 		raise web.seeother('/SetUp')
 
 if __name__ == '__main__':
-	host_ip = socket.gethostbyname(socket.getfqdn(socket.gethostname(  )))
+	# host_ip = socket.gethostbyname(socket.getfqdn(socket.gethostname(  )))
+	# host_ip = "192.168.1.126"
+
 	#config
-	conf = ConfigParser.ConfigParser()
-	conf.read("test.conf")
-	
-	conf.set("host","ip",'http://' + host_ip + ':8000')
-	fh = open('test.conf' ,'w')
-	conf.write(fh)#把要修改的节点的内容写到文件中
-	fh.close()
+	# fh = open("test.conf","r+")
+	# conf = ConfigParser.ConfigParser()
+	# conf.read("test.conf")
+	# conf.set("host","ip",'http://' + host_ip + ':8001')
+	# fh.close()
+
+	# fo = open('css_js/ui.css','r+')
+	# fo.seek(77, 1)
+	# ip = host_ip
+	# number = 15 - len(ip)
+	# if number != 0:
+	# 	for x in range(0,number):
+	# 		ip = ip + " "
+	# fo.write(ip);
+
+	# os_name = platform.system()
+	# if os_name == 'Windows':
+	# 	host_ip = socket.gethostbyname(socket.getfqdn(socket.gethostname(  )))
+	# 	print(host_ip)
+	# 	conf.set("host","ip",'http://' + host_ip + ':8000')
+	# 	conf.write(fh)
+	# 	fh.close()
+	# elif os_name == 'Linux':
+	# 	ifname = 'wlan0'
+	# 	skt = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	# 	pktString = fcntl.ioctl(skt.fileno(), 0x8915, struct.pack('256s', ifname[:15]))
+	# 	ipString  = socket.inet_ntoa(pktString[20:24])
+	# 	print(ipString)
+	# 	conf.set("host","ip",'http://' + ipString + ':8000')
+	# 	conf.write(fh)
+	# 	fh.close()
 
 	app.run()

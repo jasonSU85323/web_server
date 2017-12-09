@@ -15,57 +15,80 @@
 </head>
 <body class="output container">
 
-    <nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-        <div class="container-fluid">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin: 0px">
+        <div class="container">
             <div class="navbar-header">
-                <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+                <a class="text_title navbar-brand" href="/CurrentState">家庭物聯網監控系統</a>
             </div>
         </div>
     </nav>
+
 
     <div class="signup-three">
 
         <div class="form-signup from_w">
             <!--環境監控-->
             <form class="form-signup">         
-                <a class="list-group-item active">環境監控</a>
-                <a href="/CurrentState"     class="list-group-item">目前數值</a>
-                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
-                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+                <a class="txt_LeftTitle_T list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="txt_LeftTitle_B list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="txt_LeftTitle_B list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="txt_LeftTitle_B list-group-item">過去數值(圖)</a>
+                <br>
+            </form>
+            <form class="form-signup">         
+                <a class="txt_LeftTitle_T list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="txt_LeftTitle_B list-group-item">卡片處理</a>
+                <a href="/Monitor"          class="txt_LeftTitle_B list-group-item">監視影像</a>
+                <!-- <a href="/Monitor_two"      class="txt_LeftTitle_B list-group-item">監視影像(測試)</a> -->
+                <a href="/EventRecord"      class="txt_LeftTitle_B list-group-item">事件紀錄</a>
                 <br>
             </form>
             <form class="form-signup">
-                <a class="list-group-item active">安全監控</a>
-                <a href="/DoorLock"         class="list-group-item">門鎖</a>
-                <a href="/Monitor"          class="list-group-item">監視器</a>
-                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
-                <br>
-            </form>
-            <form class="form-signup">
-                <a class="list-group-item active">系統設定</a>
-                <a href="/SystemReportDay" class="list-group-item">報表</a>
-                <a href="/SetUp" class="list-group-item">設定</a>
+                <a class="txt_LeftTitle_T list-group-item active">系統設定</a>
+                <a href="/SystemReportDay" class="txt_LeftTitle_B list-group-item">報表生成</a>
+                <a href="/SetUp"           class="txt_LeftTitle_B list-group-item">成員處理</a>
                 <br>
             </form>
             <form class="form-signup">        
-                <a href="#" class="list-group-item">登出</a>              
+                <a href="/logout" class="list-group-item">登出</a>              
             </form>
         </div>
     </div>
     <div class="right">
-        <center>
-            <div class="text_cam">即時影像</div>
-            <div class="refresh">
-                <img width="640px" height="480px" src="http://192.168.1.108:8080/?action=stream" />
+        <div class="page-header">
+            <div class="T_top_max">
+                監視影像
             </div>
+            <div class="T_top_min">
+                <a href="/CurrentState">物聯網監控系統(首頁)</a>
+                /
+                <a href="/Monitor">監視影像</a>
+            </div>
+        </div>
+        <center>
+            <!-- <div class="refresh"> -->
+            <div>
+                <img id="randimg" width="640px" height="480px" src="http://192.168.1.108:8080/?action=stream" />
+                <!-- <img id="randimg" width="640px" height="480px" src="rtsp://140.137.99.97:554/h264" /> -->
+
+            </div>
+            <a download href="http://192.168.1.108:8080/?action=snapshot">下載成圖檔</a>
         </center>
     </div>
     
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     $$(function(){
-        setInterval(function () { $$(".refresh").load(location.href + " .refresh"); }, 10000);
+        setInterval(
+                        function () { 
+                                        // $$(".refresh").load(location.href + " .refresh");
+                                        document.getElementById("randimg").src="http://192.168.1.108:8080/?action=stream"; 
+                                        document.getElementById("randimg").src="http://192.168.1.108:8080/?action=stream&"+Math.random();
+                                    }, 
+                        10000
+
+                   );
     })
-</script>
+</script> -->
 
 
 </body>

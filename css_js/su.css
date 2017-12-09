@@ -4,15 +4,15 @@
         height: 315px;
         width: 90%;
         border-radius:1%;
-        background-color: #FFFFFF;
-        margin-top: 25px;
+        background-color: #AAAAAA;
+        margin-top: 40px;
         margin-left:50px;
     }
     .set_SR_t{
         height: 40px;
         width: 100%;
         border-radius:1%;
-        background-color: #99BBFF;   
+        background-color: #888888;   
     }
     .set_SR_t_L{
         height: 40px;
@@ -27,6 +27,14 @@
         float:right;
         padding-top: 5px;
     }
+    .set_SR_b{
+        height: 300px;
+        width: 100%;
+        padding-left: 150px;
+        padding-right: 150px;
+        background-color: #DDDDDD;
+        padding: 0px;        
+    }
     .metable{
         width: 95%;
     }
@@ -36,7 +44,7 @@
         height: 200px;
         width: 90%;
         border-radius:1%;
-        background-color: #FFFFFF;
+        background-color: #AAAAAA;
         margin-top: 25px;
         margin-left:50px;
     }
@@ -44,7 +52,7 @@
         height: 40px;
         width: 100%;
         border-radius:1%;
-        background-color: #99BBFF;   
+        background-color: #888888;   
     }
     .set_DR_t_L{
         height: 40px;
@@ -60,10 +68,11 @@
         padding-top: 5px;
     }
     .set_DR_b{
-        height: 300px;
+        height: 180px;
         width: 100%;
         padding-left: 150px;
         padding-right: 150px;
+        background-color: #DDDDDD;
     }
     .set_DR_form{
         height: 100px;
@@ -72,3 +81,28 @@
         float:left; 
     }
 /*----------------------------------------------*/
+
+.input_valve{
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: #C0C0C0;
+    border-color: #C0C0C0;
+}
+.input_button{
+    margin-top: 5px;
+    margin-left: 10px;
+    background-color: #696969;
+    border-color: #696969;
+}
+.t_txt{
+    font-weight: bold;
+    font-family:微軟正黑體;
+    font-size: 15px;
+    color: #444444;
+}
+.v_txt{
+    font-weight: bold;
+    font-family:微軟正黑體;
+    font-size: 15px;
+    color: #444444;
+}

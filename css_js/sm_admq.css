@@ -32,7 +32,7 @@
         height: 450px;
         width: 90%;
         border-radius:1%;
-        background-color: #FFFFFF;
+        background-color: #AAAAAA;
         margin-top: 25px;
         margin-left: 50px;
 
@@ -41,7 +41,7 @@
         height: 40px;
         width: 100%;
         border-radius:1%;
-        background-color: #99BBFF; 
+        background-color: #888888; 
     }
     .right_MemberAdd_t_L{
         height: 40px;
@@ -60,6 +60,7 @@
         width: 100%;
         padding-left: 150px;
         padding-right: 150px;
+        background-color: #DDDDDD;
     }
     .right_MemberAdd_form{
         height: 100px;
@@ -72,7 +73,7 @@
         height: 280px;
         width: 90%;
         border-radius:1%;
-        background-color: #FFFFFF;
+        background-color: #AAAAAA;
         margin-top: 25px;
         margin-left: 50px;
     }
@@ -80,7 +81,7 @@
         height: 40px;
         width: 100%;
         border-radius:1%;
-        background-color: #99BBFF;
+        background-color: #888888;
     }
     .right_MemberMod_t_L{
         height: 40px;
@@ -99,6 +100,7 @@
         width: 100%;
         padding-left: 150px;
         padding-right: 150px;
+        background-color: #DDDDDD;
     }
     .right_MemberMod_form{
         height: 50px;
@@ -111,7 +113,7 @@
         height: 180px;
         width: 90%;
         border-radius:1%;
-        background-color: #FFFFFF;
+        background-color: #AAAAAA;
         margin-top: 25px;
         margin-left: 50px;
     } 
@@ -119,7 +121,7 @@
         height: 40px;
         width: 100%;
         border-radius:1%;
-        background-color: #99BBFF;
+        background-color: #888888;
     }
     .right_MemberDel_t_L{
         height: 40px;
@@ -138,6 +140,7 @@
         width: 100%;
         padding-left: 150px;
         padding-right: 150px;
+        background-color: #DDDDDD;
     }
     .right_MemberDel_form{
         height: 50px;
@@ -146,3 +149,28 @@
         float:left; 
     }
 /*---------------------*/
+
+.input_valve{
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: #C0C0C0;
+    border-color: #C0C0C0;
+}
+.input_button{
+    margin-top: 5px;
+    margin-left: 10px;
+    background-color: #696969;
+    border-color: #696969;
+}
+.t_txt{
+    font-weight: bold;
+    font-family:微軟正黑體;
+    font-size: 15px;
+    color: #444444;
+}
+.v_txt{
+    font-weight: bold;
+    font-family:微軟正黑體;
+    font-size: 15px;
+    color: #444444;
+}

@@ -22,82 +22,71 @@ $def with(account)
 <!--title-->
 
 
-<nav class="navbar navbar-one navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        
-        <div class="navbar-header">
-            <li class="nav navbar-text" href="#"><span class="glyphicon"></span>居家物聯網監控系統</li>
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin: 0px">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="text_title navbar-brand" href="/CurrentState">家庭物聯網監控系統</a>
+            </div>
         </div>
-
-    </div>
-</nav>
+    </nav>
 
 
 <div class="signup-three">
 
-    <div class="form-signup from_w">
-        <!--環境監控-->
-
-        <form class="form-signup">         
-
-                <a class="list-group-item active">環境監控</a>
-                <a href="/CurrentState"     class="list-group-item">目前數值</a>
-                <a href="/PastValueTable"   class="list-group-item">過去數值(表)</a>
-                <a href="/PastValueFigure"  class="list-group-item">過去數值(圖)</a>
+        <div class="form-signup from_w">
+            <!--環境監控-->
+            <form class="form-signup">         
+                <a class="txt_LeftTitle_T list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="txt_LeftTitle_B list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="txt_LeftTitle_B list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="txt_LeftTitle_B list-group-item">過去數值(圖)</a>
                 <br>
-             
-        </form>
-
-
-        <!--安全監控-->
-
-        <form class="form-signup">         
-
-                <a class="list-group-item active">安全監控</a>
-                <a href="/DoorLock"         class="list-group-item">門鎖</a>
-                <a href="/Monitor"          class="list-group-item">監視器</a>
-                <a href="/EventRecord"      class="list-group-item">事件紀錄</a>
+            </form>
+            <form class="form-signup">         
+                <a class="txt_LeftTitle_T list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="txt_LeftTitle_B list-group-item">卡片處理</a>
+                <a href="/Monitor"          class="txt_LeftTitle_B list-group-item">監視影像</a>
+                <a href="/EventRecord"      class="txt_LeftTitle_B list-group-item">事件紀錄</a>
                 <br>
-             
-        </form>
-
-        <!--系統設定-->
-
-        <form class="form-signup">         
-
-                <a class="list-group-item active">系統設定</a>
-                <a href="/Member/Quire" class="list-group-item">成員</a>
-                <a href="/SystemReportDay" class="list-group-item">報表</a>
-                <a href="/SetUp" class="list-group-item">設定</a>
+            </form>
+            <form class="form-signup">
+                <a class="txt_LeftTitle_T list-group-item active">系統設定</a>
+                <a href="/SystemReportDay" class="txt_LeftTitle_B list-group-item">報表生成</a>
+                <a href="/SetUp"           class="txt_LeftTitle_B list-group-item">成員處理</a>
                 <br>
-             
-        </form>
-
-
-        <form class="form-signup">        
-            
-            <a href="#" class="list-group-item">登出</a>
-                                
-        </form>
-
-        
-    </div>
+            </form>
+            <form class="form-signup">        
+                <a href="/logout" class="list-group-item">登出</a>              
+            </form>
+        </div>
 
 </div>
 
 
-<div class="right">
+    <div class="right">
+        <div class="page-header">
+            <div class="T_top_max">
+                成員處理
+            </div>
+            <div class="T_top_min">
+                <a href="/CurrentState">物聯網監控系統(首頁)</a>
+                /
+                <a href="/SetUp">成員處理</a>
+                /
+                <a href="/SystemSetUpcard">刪除卡片</a>
+            </div>
+        </div>
         <!--刪除-->
         <div class="right_MemberDel">
             <div class="right_MemberDel_t">
                 <div class="text_1">刪除卡片</div>
             </div>
-            <div class="right_MemberAdd_t_b">
+            <div class="right_MemberAdd_t_b t_txt">
                 <form action="/SystemSetUpcard" method="POST" class="form-horizontal right_MemberDel_form">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">選擇電話</label>
                         <div class="col-sm-10">
-                            <select name="account" class="form-control">
+                            <select name="account" class="input_valve form-control">
                                 $for i in range(0,len(account)):
                                     <option value="$account[i]">$account[i]</option>
 
@@ -107,8 +96,8 @@ $def with(account)
                     
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default">確認</button>
-                            <a class="btn btn-default" href="/SetUp" role="button">返回</a>
+                            <button type="submit" class="input_button btn btn-default">確認</button>
+                            <a class="input_button btn btn-default" href="/SetUp" role="button">返回</a>
                         </div>
                     </div>
                 </form>

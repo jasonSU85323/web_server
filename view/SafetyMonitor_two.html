@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- 以下這5行是引用bootstrap及jquery CDN (Content Delivery Network)的標準動作 -->
+    <meta charset="utf-8"> <!-- 指定內文的編碼，若要顯示中文，通常用utf-8這個unicode編碼 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/ui">
+    <link rel="stylesheet" type="text/css" href="/sm">
+	<title>居家物聯網監控系統</title>
+
+</head>
+<body class="output container">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="margin: 0px">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="text_title navbar-brand" href="/CurrentState">家庭物聯網監控系統</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="signup-three">
+
+        <div class="form-signup from_w">
+            <!--環境監控-->
+            <form class="form-signup">         
+                <a class="txt_LeftTitle_T list-group-item active">環境監控</a>
+                <a href="/CurrentState"     class="txt_LeftTitle_B list-group-item">目前數值</a>
+                <a href="/PastValueTable"   class="txt_LeftTitle_B list-group-item">過去數值(表)</a>
+                <a href="/PastValueFigure"  class="txt_LeftTitle_B list-group-item">過去數值(圖)</a>
+                <br>
+            </form>
+            <form class="form-signup">         
+                <a class="txt_LeftTitle_T list-group-item active">安全監控</a>
+                <a href="/DoorLock"         class="txt_LeftTitle_B list-group-item">卡片處理</a>
+                <a href="/Monitor"          class="txt_LeftTitle_B list-group-item">監視影像</a>
+                <a href="/EventRecord"      class="txt_LeftTitle_B list-group-item">事件紀錄</a>
+                <br>
+            </form>
+            <form class="form-signup">
+                <a class="txt_LeftTitle_T list-group-item active">系統設定</a>
+                <a href="/SystemReportDay" class="txt_LeftTitle_B list-group-item">報表生成</a>
+                <a href="/SetUp"           class="txt_LeftTitle_B list-group-item">成員處理</a>
+                <br>
+            </form>
+            <form class="form-signup">        
+                <a href="/logout" class="list-group-item">登出</a>              
+            </form>
+        </div>
+    </div>
+    <div class="right">
+        <div class="page-header">
+            <div class="T_top_max">
+                監視影像
+            </div>
+            <div class="T_top_min">
+                <a href="/CurrentState">物聯網監控系統(首頁)</a>
+                /
+                <a href="/Monitor">監視影像</a>
+            </div>
+        </div>
+        <center>
+<!-- Noooooooooooooooo!!! -->
+            <div style="height: 500px; width: 800px;">
+                <div id="carousel-example-captions" class="carousel slide" data-ride="carousel">
+                    
+
+
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-captions" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-example-captions" data-slide-to="1" class=""></li>
+                        <li data-target="#carousel-example-captions" data-slide-to="2" class=""></li>
+                        <li data-target="#carousel-example-captions" data-slide-to="3" class=""></li>
+                    </ol>
+                    
+
+                    
+                    <div class="carousel-inner" role="listbox">
+                        <div class="item active">
+                            <img src="http://127.0.0.1:8000/images">
+                            <div class="carousel-caption">
+                                <h3>Second slide label</h3>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="http://127.0.0.1:8000/images">
+                            <div class="carousel-caption">
+                                <h3>First slide label</h3>
+                                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="http://127.0.0.1:8000/images">
+                            <div class="carousel-caption">
+                                <h3>Third slide label</h3>
+                                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="">
+                            <div class="carousel-caption">
+                                <h3>Third slide label</h3>
+                                <p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    
+                    <a class="left carousel-control" href="#carousel-example-captions" role="button" data-slide="prev" style="height: 445px; background-color: #008800; opacity:0.0;">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-captions" role="button" data-slide="next" style="height: 445px;background-color: #008800; opacity:0.0;">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                
+                </div>
+            </div>
+
+<!-- Noooooooooooooooo!!! -->
+        </center>
+    </div>
+
+
+</body>
+</html>
